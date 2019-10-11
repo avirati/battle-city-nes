@@ -1,13 +1,10 @@
 import { IDimension } from 'interfaces';
 
-export const getScreenDimension = (): IDimension => {
-    const docElem = document.documentElement;
-    const body = document.body;
-    const width = window.innerWidth || docElem.clientWidth || body.clientWidth;
-    const height = window.innerHeight || docElem.clientHeight || body.clientHeight;
+import { VIEWPORT_SIZE } from 'global/constants';
 
+export const getScreenDimension = (): IDimension => {
     return {
-        height,
-        width,
+        height: VIEWPORT_SIZE,
+        width: VIEWPORT_SIZE,
     };
 };

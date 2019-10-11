@@ -1,9 +1,11 @@
 import { getScreenDimension } from 'helpers';
 
+import { BRICK_IMAGE } from 'global/constants';
 import {
     Arena,
     IArena,
 } from 'models/Arena';
+import { CellType } from 'models/Cell';
 
 export class Canvas {
     private canvas: HTMLCanvasElement;
@@ -39,17 +41,25 @@ export class Canvas {
     }
 
     private renderScene = () => {
-        for (let i = 0; i < this.gameData.size; i++) {
-            for (let j = 0; j < this.gameData.size; j++) {
-                const cell = this.gameData.matrix[i][j];
-                this.context!.fillStyle = '#000000';
-                this.context!.strokeRect(
-                    cell.position.x,
-                    cell.position.y,
-                    cell.size,
-                    cell.size,
-                );
+        const imagePromise = this.getCellImage(CellType.BRICK);
+        imagePromise
+        .then((brickImage) => {
+            for (let i = 0; i < this.gameData.size; i++) {
+                for (let j = 0; j < this.gameData.size; j++) {
+                    const cell = this.gameData.matrix[i][j];
+                    this.context!.drawImage(brickImage, cell.position.x, cell.position.y, cell.size, cell.size);
+                }
             }
-        }
+        });
     }
+
+    private getCellImage = (cellType: CellType): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
+        const image = new Image();
+        switch (cellType) {
+            case CellType.BRICK:
+                image.src = BRICK_IMAGE;
+        }
+
+        image.onload = () => resolve(image);
+    })
 }

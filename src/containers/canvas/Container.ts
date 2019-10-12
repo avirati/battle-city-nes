@@ -61,5 +61,6 @@ export class Canvas {
         }
 
         image.onload = () => resolve(image);
+        image.onerror = (err) => reject(err);
     })
 }

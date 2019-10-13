@@ -13,7 +13,7 @@ import {
 } from 'models/Arena';
 import { CellType } from 'models/Cell';
 
-export class Canvas {
+class Canvas {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
     private gameData: IArena;
@@ -101,3 +101,5 @@ export class Canvas {
         image.onerror = (err) => reject(err);
     })
 }
+
+export const canvas = new Canvas();

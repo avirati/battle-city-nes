@@ -1,4 +1,5 @@
-import { Canvas } from 'containers/canvas/Container';
+import { canvas } from 'containers/canvas/Container';
+import { menu } from 'containers/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 
 const render = (container: HTMLElement | null) => {
@@ -6,9 +7,8 @@ const render = (container: HTMLElement | null) => {
         throw new Error(INVALID_CONTAINER_ID);
     }
 
-    const canvas = new Canvas();
-
     container.appendChild(canvas.getCanvas());
+    container.appendChild(menu.getContainer());
 };
 
 const startApp = () => {

@@ -97,7 +97,13 @@ class Canvas {
     })
 
     private prepareLevelDesigner = () => {
-        this.canvas.addEventListener('click', (event: MouseEvent) => {
+        let moving = false;
+        this.canvas.addEventListener('mousedown', () => moving = true);
+        this.canvas.addEventListener('mouseup', () => moving = false);
+        this.canvas.addEventListener('mousemove', (event: MouseEvent) => {
+            if (!moving) {
+                return;
+            }
             const x = event.offsetX;
             const y = event.offsetY;
 

@@ -1,5 +1,6 @@
 /// <reference path='global/global.d.ts' />
 
+import { canvas as gameMechanicsCanvas } from 'containers/gameMechanics/canvas/Container';
 import { canvas as levelDesignerCanvas } from 'containers/levelDesigner/canvas/Container';
 import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Container';
 import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Container';
@@ -21,6 +22,7 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
     }
 
     container.appendChild(singlePlayerCanvas.getCanvas());
+    container.appendChild(gameMechanicsCanvas.getCanvas());
     container.appendChild(singlePlayerMenu.getContainer());
 };
 

@@ -7,7 +7,7 @@ export enum TankDirection {
     BACKWARD = 'BACKWARD',
 }
 
-export const TANK_DEFAULT_SPEED = 10;
+export const TANK_DEFAULT_SPEED = 5;
 export const TANK_DEFAULT_HP = 100;
 
 export interface ITankProps {
@@ -54,7 +54,7 @@ export class Tank implements ITank {
     }
 
     public goLeft = () => {
-        this.direction = TankDirection.FORWARD;
+        this.direction = TankDirection.LEFT;
         this.position.x -= this.speed;
     }
 }

@@ -29,7 +29,10 @@ class Canvas {
         this.clearScene();
 
         this.downloadTextures()
-        .then(() => this.renderScene());
+        .then(() => {
+            this.addKeyBindings();
+            this.renderScene();
+        });
     }
 
     public getCanvas = () => this.canvas;
@@ -86,6 +89,7 @@ class Canvas {
     }
 
     private renderScene = () => {
+        this.clearScene();
         this.context!.drawImage(
             this.imageMap.get(this.tank.direction)!,
             this.tank.position.x,
@@ -93,6 +97,29 @@ class Canvas {
             TANK_SIZE,
             TANK_SIZE,
         );
+    }
+
+    private addKeyBindings = () => {
+        document.addEventListener('keydown', (event: KeyboardEvent) => {
+            const key = event.keyCode || event.which;
+
+            switch (key) {
+                case 38: // UP Arrow
+                    this.tank.goForward();
+                    break;
+                case 40: // DOWN Arrow
+                    this.tank.goBackward();
+                    break;
+                case 39: // RIGHT Arrow
+                    this.tank.goRight();
+                    break;
+                case 37:
+                    this.tank.goLeft();
+                    break;
+            }
+
+            this.renderScene();
+        });
     }
 }
 

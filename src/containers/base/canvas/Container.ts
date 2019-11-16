@@ -2,6 +2,7 @@ import { getScreenDimension } from 'helpers';
 
 import {
     BRICK_IMAGE,
+    EMPTY_BLACK_IMAGE,
     EMPTY_IMAGE,
     GRASS_IMAGE,
     STEEL_IMAGE,
@@ -39,31 +40,6 @@ export class CanvasBase {
         this.renderScene();
     }
 
-    protected downloadTextures = async (): Promise<void> => {
-        const imagePromises = [
-            this.getCellImage(CellType.BRICK),
-            this.getCellImage(CellType.GRASS),
-            this.getCellImage(CellType.STEEL),
-            this.getCellImage(CellType.WATER),
-            this.getCellImage(CellType.EAGLE),
-            this.getCellImage(CellType.EMPTY),
-        ];
-        const [
-            brickImage,
-            grassImage,
-            steelImage,
-            waterImage,
-            eagleImage,
-            emptyImage,
-        ] = await Promise.all(imagePromises);
-        this.imageMap.set(CellType.BRICK, brickImage);
-        this.imageMap.set(CellType.GRASS, grassImage);
-        this.imageMap.set(CellType.STEEL, steelImage);
-        this.imageMap.set(CellType.WATER, waterImage);
-        this.imageMap.set(CellType.EAGLE, eagleImage);
-        this.imageMap.set(CellType.EMPTY, emptyImage);
-    }
-
     protected renderScene = () => {
         for (let i = 0; i < this.arena.size; i++) {
             for (let j = 0; j < this.arena.size; j++) {
@@ -79,18 +55,7 @@ export class CanvasBase {
         }
     }
 
-    private setSize = () => {
-        const { width, height } = getScreenDimension();
-        const size = width > height ? height : width;
-        this.canvas.width = size;
-        this.canvas.height = size;
-    }
-
-    private clearScene = () => {
-        this.context!.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    private getCellImage = (cellType: CellType): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
+    protected getCellImage = (cellType: CellType): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
         const image = new Image();
         switch (cellType) {
             case CellType.BRICK:
@@ -111,9 +76,23 @@ export class CanvasBase {
             case CellType.EMPTY:
                 image.src = EMPTY_IMAGE;
                 break;
+            case CellType.EMPTY_BLACK:
+                image.src = EMPTY_BLACK_IMAGE;
+                break;
         }
 
         image.onload = () => resolve(image);
         image.onerror = (err) => reject(err);
     })
+
+    private setSize = () => {
+        const { width, height } = getScreenDimension();
+        const size = width > height ? height : width;
+        this.canvas.width = size;
+        this.canvas.height = size;
+    }
+
+    private clearScene = () => {
+        this.context!.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
 }

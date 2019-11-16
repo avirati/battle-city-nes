@@ -3,6 +3,7 @@ import { Coordinate, ICoordinate } from 'models/Coordinate';
 
 export enum CellType {
     EMPTY = 'EMPTY',
+    EMPTY_BLACK = 'EMPTY_BLACK',
     BRICK = 'BRICK',
     GRASS = 'GRASS',
     WATER = 'WATER',

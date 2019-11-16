@@ -2,6 +2,8 @@
 
 import { canvas as levelDesignerCanvas } from 'containers/levelDesigner/canvas/Container';
 import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Container';
+import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Container';
+import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 
 const renderLevelDesigner = (container: HTMLElement | null) => {
@@ -17,6 +19,9 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
     if (!container) {
         throw new Error(INVALID_CONTAINER_ID);
     }
+
+    container.appendChild(singlePlayerCanvas.getCanvas());
+    container.appendChild(singlePlayerMenu.getContainer());
 };
 
 const startApp = () => {

@@ -1,7 +1,7 @@
 /// <reference path='global/global.d.ts' />
 
-import { canvas } from 'containers/canvas/Container';
-import { menu } from 'containers/menu/Container';
+import { canvas as levelDesignerCanvas } from 'containers/levelDesigner/canvas/Container';
+import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 
 const renderLevelDesigner = (container: HTMLElement | null) => {
@@ -9,8 +9,8 @@ const renderLevelDesigner = (container: HTMLElement | null) => {
         throw new Error(INVALID_CONTAINER_ID);
     }
 
-    container.appendChild(canvas.getCanvas());
-    container.appendChild(menu.getContainer());
+    container.appendChild(levelDesignerCanvas.getCanvas());
+    container.appendChild(levelDesignerMenu.getContainer());
 };
 
 const renderSinglePlayerGame = (container: HTMLElement | null) => {

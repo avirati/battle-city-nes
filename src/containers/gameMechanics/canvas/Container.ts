@@ -5,9 +5,12 @@ import {
     TANK_IMAGE_RIGHT,
     TANK_SIZE,
     TANK_SPAWN_POSITION_BOTTOM_LEFT,
+    VIEWPORT_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
 import { Tank, TankDirection } from 'models/Tank';
+
+// import { canvas as battleGround } from '../../singlePlayer/canvas/Container';
 
 class Canvas {
     private canvas: HTMLCanvasElement;
@@ -105,21 +108,46 @@ class Canvas {
 
             switch (key) {
                 case 38: // UP Arrow
-                    this.tank.goForward();
+                    if (this.canMove(TankDirection.FORWARD)) {
+                        this.tank.goForward();
+                    }
                     break;
                 case 40: // DOWN Arrow
-                    this.tank.goBackward();
+                    if (this.canMove(TankDirection.BACKWARD)) {
+                        this.tank.goBackward();
+                    }
                     break;
                 case 39: // RIGHT Arrow
-                    this.tank.goRight();
+                    if (this.canMove(TankDirection.RIGHT)) {
+                        this.tank.goRight();
+                    }
                     break;
                 case 37:
-                    this.tank.goLeft();
+                    if (this.canMove(TankDirection.LEFT)) {
+                        this.tank.goLeft();
+                    }
                     break;
             }
 
             this.renderScene();
         });
+    }
+
+    private canMove = (direction: TankDirection): boolean => {
+        const tankPosition = this.tank.position;
+
+        switch (direction) {
+            case TankDirection.LEFT:
+                return tankPosition.x > 0;
+            case TankDirection.RIGHT:
+                return tankPosition.x < VIEWPORT_SIZE - TANK_SIZE;
+            case TankDirection.FORWARD:
+                return tankPosition.y > 0;
+            case TankDirection.BACKWARD:
+                return tankPosition.y < VIEWPORT_SIZE - TANK_SIZE;
+            default:
+                return false;
+        }
     }
 }
 

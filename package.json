@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "webpack --watch",
     "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "level-designer": "webpack-dev-server --open --env.MODULE=LEVEL_DESIGNER",
+    "single-player": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER"
   }
 }

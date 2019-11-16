@@ -1,11 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
 
 
 
-module.exports = {
+module.exports = (env) => ({
     mode: 'development',
     entry: './src/index.ts',
     devtool: 'inline-source-map',
@@ -30,7 +31,10 @@ module.exports = {
         }),
         new TSLintPlugin({
             files: ['./src/**/*.ts']
-        })
+        }),
+        new webpack.DefinePlugin({
+            __MODULE__: "'" + env.MODULE + "'",
+        }),
     ],
     resolve: {
         extensions: [ '.tsx', '.ts', '.js' ],
@@ -48,4 +52,4 @@ module.exports = {
         compress: true,
         port: 9000
     }
-};
+});

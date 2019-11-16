@@ -34,11 +34,15 @@ class Canvas {
             this.renderScene();
             this.prepareLevelDesigner();
         });
+
+        menu.setExportAction(this.getGameData);
+
+        // menu.setImportAction(this.setGameData);
     }
 
-    public getGameData = (): ICell[][] => this.gameData.matrix;
+    public getGameData = (): ICell[][] => this.gameData.exportArenaData();
     public setGameData = (matrix: ICell[][]): void => {
-        this.gameData.loadArenaWith(matrix);
+        this.gameData.importArenaData(matrix);
         this.renderScene();
     }
 

@@ -5,7 +5,7 @@ import {
     STEEL_IMAGE,
     WATER_IMAGE,
 } from 'global/constants';
-import { CellType } from 'models/Cell';
+import { CellType, ICell } from 'models/Cell';
 
 class Menu {
     private brickCreatorButton: HTMLImageElement;
@@ -13,6 +13,9 @@ class Menu {
     private steelCreatorButton: HTMLImageElement;
     private grassCreatorButton: HTMLImageElement;
     private emptyCreatorButton: HTMLImageElement;
+
+    private exportButton: HTMLButtonElement;
+    private importButton: HTMLButtonElement;
 
     private container: HTMLDivElement;
 
@@ -42,6 +45,14 @@ class Menu {
         this.emptyCreatorButton.src = EMPTY_IMAGE;
         this.emptyCreatorButton.setAttribute('data-image-type', CellType.EMPTY);
 
+        this.exportButton = document.createElement('button');
+        this.exportButton.className = 'custom-btn';
+        this.exportButton.innerText = 'Export Level';
+
+        this.importButton = document.createElement('button');
+        this.importButton.className = 'custom-btn';
+        this.importButton.innerText = 'Import Level';
+
         this.attachToParent();
         this.attachEventListeners();
     }
@@ -49,12 +60,29 @@ class Menu {
     public getSelectedCellType = () => this.selectedCellType;
     public getContainer = () => this.container;
 
+    public setExportAction = (callback: () => ICell[][]) => {
+        this.exportButton.addEventListener('click', (event: MouseEvent) => {
+            event.stopPropagation();
+            const data = callback();
+            const serialisedGameData = JSON.stringify(data);
+
+            const link = document.createElement('a');
+            link.download = 'game.json';
+            const blob = new Blob([serialisedGameData], { type: 'text/plain' });
+            link.href = window.URL.createObjectURL(blob);
+            link.click();
+        });
+    }
+
     private attachToParent = () => {
         this.container.appendChild(this.brickCreatorButton);
         this.container.appendChild(this.waterCreatorButton);
         this.container.appendChild(this.steelCreatorButton);
         this.container.appendChild(this.grassCreatorButton);
         this.container.appendChild(this.emptyCreatorButton);
+
+        this.container.appendChild(this.exportButton);
+        this.container.appendChild(this.importButton);
     }
 
     private attachEventListeners = () => {

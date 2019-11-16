@@ -1,6 +1,9 @@
 export interface ICoordinate {
     x: number;
     y: number;
+
+    changeX: (amount: number) => Coordinate;
+    changeY: (amount: number) => Coordinate;
 }
 
 export class Coordinate implements ICoordinate {

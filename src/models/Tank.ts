@@ -19,10 +19,8 @@ export interface ITank extends ITankProps {
     HP: number;
     speed: number;
 
-    goForward: () => void;
-    goBackward: () => void;
-    goRight: () => void;
-    goLeft: () => void;
+    move: (direction: TankDirection) => void;
+    changeDirection: (direction: TankDirection) => void;
 }
 
 export class Tank implements ITank {
@@ -38,23 +36,24 @@ export class Tank implements ITank {
         this.position = position;
     }
 
-    public goForward = () => {
-        this.direction = TankDirection.FORWARD;
-        this.position.y -= this.speed;
+    public move = (direction: TankDirection) => {
+        if (this.direction === direction) { // Cant move in a different direction. Need to change direction first
+            switch (direction) {
+                case TankDirection.FORWARD:
+                    this.position.y -= this.speed;
+                    break;
+                case TankDirection.BACKWARD:
+                    this.position.y += this.speed;
+                    break;
+                case TankDirection.RIGHT:
+                    this.position.x += this.speed;
+                    break;
+                case TankDirection.LEFT:
+                    this.position.x -= this.speed;
+                    break;
+            }
+        }
     }
 
-    public goBackward = () => {
-        this.direction = TankDirection.BACKWARD;
-        this.position.y += this.speed;
-    }
-
-    public goRight = () => {
-        this.direction = TankDirection.RIGHT;
-        this.position.x += this.speed;
-    }
-
-    public goLeft = () => {
-        this.direction = TankDirection.LEFT;
-        this.position.x -= this.speed;
-    }
+    public changeDirection = (direction: TankDirection) => this.direction = direction;
 }

@@ -1,5 +1,5 @@
 import { CanvasBase } from 'containers/base/canvas/Container';
-import { CellType, ICell } from 'models/Cell';
+import { Cell, CellType, ICell } from 'models/Cell';
 
 import { menu } from '../menu/Container';
 
@@ -12,7 +12,15 @@ class Canvas extends CanvasBase {
             this.renderScene();
         });
 
-        menu.setImportAction((gameData: ICell[][]) => {
+        menu.setImportAction((cellInformation: ICell[][]) => {
+            const gameData: ICell[][] = [];
+            for (let i = 0; i < cellInformation.length; i++) {
+                gameData[i] = [];
+                for (let j = 0; j < cellInformation.length; j++) {
+                    const cell = cellInformation[i][j];
+                    gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y);
+                }
+            }
             this.setGameData(gameData);
         });
     }

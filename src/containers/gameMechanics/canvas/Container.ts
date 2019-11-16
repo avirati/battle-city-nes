@@ -1,4 +1,5 @@
 import {
+    CELL_SIZE,
     TANK_IMAGE_BACKWARD,
     TANK_IMAGE_FORWARD,
     TANK_IMAGE_LEFT,
@@ -10,7 +11,7 @@ import {
 import { getScreenDimension } from 'helpers';
 import { Tank, TankDirection } from 'models/Tank';
 
-// import { canvas as battleGround } from '../../singlePlayer/canvas/Container';
+import { canvas as battleGround } from '../../singlePlayer/canvas/Container';
 
 class Canvas {
     private canvas: HTMLCanvasElement;
@@ -133,7 +134,7 @@ class Canvas {
         });
     }
 
-    private canMove = (direction: TankDirection): boolean => {
+    private isAtEdgeOfTheWorld = (direction: TankDirection): boolean => {
         const tankPosition = this.tank.position;
 
         switch (direction) {
@@ -149,6 +150,29 @@ class Canvas {
                 return false;
         }
     }
+
+    private isCollidingWithObjects = (direction: TankDirection) => {
+        const topLeft = this.tank.position;
+        const arena = battleGround.getArena();
+
+        switch (direction) {
+            case TankDirection.FORWARD:
+                const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
+                const cellRow = Math.floor((topLeft.y + this.tank.speed) / CELL_SIZE);
+
+                for (let i = 0; i < TANK_SIZE / CELL_SIZE; i++) {
+                    const cell = arena.matrix[cellColumn][cellRow];
+                    if (cell.willCollideWithTank()) {
+                        return false;
+                    }
+                }
+                return true;
+        }
+        return true;
+    }
+
+    private canMove = (direction: TankDirection): boolean =>
+        this.isAtEdgeOfTheWorld(direction) && this.isCollidingWithObjects(direction)
 }
 
 export const canvas = new Canvas();

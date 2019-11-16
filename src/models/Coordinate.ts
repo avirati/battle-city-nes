@@ -11,4 +11,7 @@ export class Coordinate implements ICoordinate {
         this.x = x;
         this.y = y;
     }
+
+    public changeX = (amount: number) => new Coordinate(this.x + amount, this.y);
+    public changeY = (amount: number) => new Coordinate(this.x, this.y + amount);
 }

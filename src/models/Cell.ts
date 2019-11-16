@@ -15,6 +15,9 @@ export interface ICell {
     size: number;
     position: ICoordinate;
     type: CellType;
+
+    willCollideWithTank: () => boolean;
+    willCollideWithTankShells: () => boolean;
 }
 
 export class Cell implements ICell {
@@ -27,4 +30,8 @@ export class Cell implements ICell {
         this.position = new Coordinate(x, y);
         this.type = type;
     }
+
+    public willCollideWithTank = () => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(this.type);
+
+    public willCollideWithTankShells = () => [CellType.BRICK, CellType.EAGLE, CellType.STEEL].includes(this.type);
 }

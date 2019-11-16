@@ -12,7 +12,7 @@ import {
     Arena,
     IArena,
 } from 'models/Arena';
-import { CellType } from 'models/Cell';
+import { CellType, ICell } from 'models/Cell';
 import { menu } from '../menu/Container';
 
 class Canvas {
@@ -34,6 +34,12 @@ class Canvas {
             this.renderScene();
             this.prepareLevelDesigner();
         });
+    }
+
+    public getGameData = (): ICell[][] => this.gameData.matrix;
+    public setGameData = (matrix: ICell[][]): void => {
+        this.gameData.loadArenaWith(matrix);
+        this.renderScene();
     }
 
     public getCanvas = () => this.canvas;

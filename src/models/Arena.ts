@@ -12,6 +12,8 @@ import {
 export interface IArena {
     matrix: ICell[][];
     size: number;
+
+    loadArenaWith: (matrix: ICell[][]) => void;
 }
 
 export class Arena implements IArena {
@@ -23,6 +25,8 @@ export class Arena implements IArena {
         this.size = ARENA_SIZE;
         this.fillWithEmptyCells();
     }
+
+    public loadArenaWith = (matrix: ICell[][]) => this.matrix = matrix;
 
     private fillWithEmptyCells = () => {
         for (let i = 0; i < this.size; i++) {

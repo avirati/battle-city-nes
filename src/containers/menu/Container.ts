@@ -15,7 +15,7 @@ class Menu {
     private emptyCreatorButton: HTMLImageElement;
 
     private exportButton: HTMLButtonElement;
-    private importButton: HTMLButtonElement;
+    private importButton: HTMLInputElement;
 
     private container: HTMLDivElement;
 
@@ -49,9 +49,9 @@ class Menu {
         this.exportButton.className = 'custom-btn';
         this.exportButton.innerText = 'Export Level';
 
-        this.importButton = document.createElement('button');
+        this.importButton = document.createElement('input');
+        this.importButton.type = 'file';
         this.importButton.className = 'custom-btn';
-        this.importButton.innerText = 'Import Level';
 
         this.attachToParent();
         this.attachEventListeners();
@@ -71,6 +71,31 @@ class Menu {
             const blob = new Blob([serialisedGameData], { type: 'text/plain' });
             link.href = window.URL.createObjectURL(blob);
             link.click();
+        });
+    }
+
+    public setImportAction = (callback: (gameData: ICell[][]) => void) => {
+        this.importButton.addEventListener('change', (event: any) => { // No type def present https://github.com/microsoft/TypeScript/issues/31816
+            event.stopPropagation();
+            const file: File = event.target.files[0];
+
+            if (file.type !== 'application/json') {
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (event: ProgressEvent<FileReader>) => {
+                const serialisedGameData = event.target!.result;
+                try {
+                    const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
+                    callback(parsedGameData);
+                } catch (error) {
+                    console.error('Invalid Game Data', error);
+                }
+            };
+            // Read in the image file as a data URL.
+            reader.readAsText(file);
         });
     }
 

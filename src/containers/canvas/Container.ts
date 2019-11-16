@@ -37,7 +37,9 @@ class Canvas {
 
         menu.setExportAction(this.getGameData);
 
-        // menu.setImportAction(this.setGameData);
+        menu.setImportAction((gameData: ICell[][]) => {
+            this.setGameData(gameData);
+        });
     }
 
     public getGameData = (): ICell[][] => this.gameData.exportArenaData();
@@ -69,7 +71,7 @@ class Canvas {
             for (let j = 0; j < this.gameData.size; j++) {
                 const cell = this.gameData.matrix[i][j];
                 this.context!.drawImage(
-                    this.imageMap.get(CellType.EMPTY)!,
+                    this.imageMap.get(cell.type)!,
                     cell.position.x,
                     cell.position.y,
                     cell.size,

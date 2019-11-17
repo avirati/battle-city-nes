@@ -229,16 +229,14 @@ class Canvas {
     private isCollidingForward = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
         const topLeft = object.position;
-        const objectSpeed = object.speed;
-        const objectSize = object.occupiedCells;
         const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
-        const cellRow = Math.floor((topLeft.y - objectSpeed) / CELL_SIZE);
+        const cellRow = Math.floor((topLeft.y - object.speed) / CELL_SIZE);
 
         if (cellRow <= 0) {
             return true;
         }
 
-        for (let i = 0; i <= objectSize; i++) {
+        for (let i = 0; i <= object.occupiedCells; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
             if (cell && object.willCollideWithCell(cell)) {
                 return true;
@@ -250,16 +248,14 @@ class Canvas {
     private isCollidingLeft = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
         const topLeft = object.position;
-        const objectSpeed = object.speed;
-        const objectSize = object.occupiedCells;
-        const cellColumn = Math.floor((topLeft.x - objectSpeed) / CELL_SIZE);
+        const cellColumn = Math.floor((topLeft.x - object.speed) / CELL_SIZE);
         const cellRow = Math.floor(topLeft.y / CELL_SIZE);
 
         if (cellColumn <= 0) {
             return true;
         }
 
-        for (let i = 0; i <= objectSize; i++) {
+        for (let i = 0; i <= object.occupiedCells; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && object.willCollideWithCell(cell)) {
                 return true;
@@ -271,17 +267,15 @@ class Canvas {
     private isCollidingRight = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
         const topLeft = object.position;
-        const objectSpeed = object.speed;
-        const objectSize = object.occupiedCells;
         const topRight = topLeft.changeX(object.size);
-        const cellColumn = Math.floor((topRight.x + objectSpeed) / CELL_SIZE);
+        const cellColumn = Math.floor((topRight.x + object.speed) / CELL_SIZE);
         const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
         if (cellColumn >= arena.size) {
             return true;
         }
 
-        for (let i = 0; i <= objectSize; i++) {
+        for (let i = 0; i <= object.occupiedCells; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && object.willCollideWithCell(cell)) {
                 return true;
@@ -293,17 +287,15 @@ class Canvas {
     private isCollidingBackward = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
         const topLeft = object.position;
-        const objectSpeed = object.speed;
-        const objectSize = object.occupiedCells;
         const bottomLeft = topLeft.changeY(object.size);
         const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);
-        const cellRow = Math.floor((bottomLeft.y + objectSpeed) / CELL_SIZE);
+        const cellRow = Math.floor((bottomLeft.y + object.speed) / CELL_SIZE);
 
         if (cellRow >= arena.size) {
             return true;
         }
 
-        for (let i = 0; i <= objectSize; i++) {
+        for (let i = 0; i <= object.occupiedCells; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
             if (cell && object.willCollideWithCell(cell)) {
                 return true;

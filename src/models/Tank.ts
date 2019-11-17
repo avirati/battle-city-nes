@@ -1,4 +1,4 @@
-import { TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
+import { SHELL_SIZE, TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
 
 import { Coordinate } from './Coordinate';
 import { getShellInstance } from './Shell';
@@ -71,6 +71,22 @@ export class Tank implements ITank {
     }
 
     private getShellPosition = (): Coordinate => {
-        return this.position;
+        switch (this.direction) {
+            case TankDirection.FORWARD:
+                return this.position.changeX((TANK_SIZE - SHELL_SIZE) / 2);
+            case TankDirection.RIGHT:
+                return this.position
+                    .changeX(TANK_SIZE)
+                    .changeY((TANK_SIZE - SHELL_SIZE) / 2);
+            case TankDirection.BACKWARD:
+                    return this.position
+                        .changeX((TANK_SIZE - SHELL_SIZE) / 2)
+                        .changeY(TANK_SIZE);
+            case TankDirection.LEFT:
+                    return this.position
+                        .changeY((TANK_SIZE - SHELL_SIZE) / 2);
+            default:
+                return this.position;
+        }
     }
 }

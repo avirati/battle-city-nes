@@ -33,8 +33,8 @@ export class Shell implements IShell {
         this.id = id;
     }
 
-    public move = (direction: TankDirection) => {
-        switch (direction) {
+    public move = () => {
+        switch (this.direction) {
             case TankDirection.FORWARD:
                 this.position.y -= this.speed;
                 break;

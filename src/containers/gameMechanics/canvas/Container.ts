@@ -179,6 +179,7 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.FORWARD);
                     }
+                    this.renderScene();
                     break;
                 case 40: // DOWN Arrow
                     if (this.tank.direction === TankDirection.BACKWARD) {
@@ -188,6 +189,7 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.BACKWARD);
                     }
+                    this.renderScene();
                     break;
                 case 39: // RIGHT Arrow
                     if (this.tank.direction === TankDirection.RIGHT) {
@@ -197,6 +199,7 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.RIGHT);
                     }
+                    this.renderScene();
                     break;
                 case 37:
                     if (this.tank.direction === TankDirection.LEFT) {
@@ -206,14 +209,13 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.LEFT);
                     }
+                    this.renderScene();
                     break;
 
                 case 32:
                     const shell = this.tank.fire();
                     this.projectiles.set(shell.getId(), shell);
             }
-
-            this.renderScene();
         });
     }
 
@@ -330,6 +332,8 @@ class Canvas {
         if (this.projectiles.size > 0) {
             const context = this.context!;
             this.projectiles.forEach((shell) => {
+                context.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
+                shell.move();
                 context.drawImage(
                     this.shellSprites.get(this.tank.direction)!,
                     shell.position.x,
@@ -337,12 +341,6 @@ class Canvas {
                     SHELL_SIZE,
                     SHELL_SIZE,
                 );
-
-                if (__DEV__) {
-                    context.strokeStyle = '#FFFFFF';
-                    context.lineWidth = 1;
-                    context.strokeRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
-                }
             });
         }
     }
@@ -350,7 +348,7 @@ class Canvas {
     private startRenderingShells = () => {
         const shellRenderInterval = Math.round(1000 / SHELL_FPS);
         this.renderShellsForOneFrame();
-        setTimeout(this.renderShellsForOneFrame, shellRenderInterval);
+        setInterval(this.renderShellsForOneFrame, shellRenderInterval);
     }
 }
 

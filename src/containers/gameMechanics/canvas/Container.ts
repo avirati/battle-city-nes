@@ -232,7 +232,7 @@ class Canvas {
         const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
         const cellRow = Math.floor((topLeft.y - object.speed) / CELL_SIZE);
 
-        if (cellRow <= 0) {
+        if (cellRow < 0) {
             return true;
         }
 
@@ -251,7 +251,7 @@ class Canvas {
         const cellColumn = Math.floor((topLeft.x - object.speed) / CELL_SIZE);
         const cellRow = Math.floor(topLeft.y / CELL_SIZE);
 
-        if (cellColumn <= 0) {
+        if (cellColumn < 0) {
             return true;
         }
 
@@ -271,7 +271,7 @@ class Canvas {
         const cellColumn = Math.floor((topRight.x + object.speed) / CELL_SIZE);
         const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
-        if (cellColumn >= arena.size) {
+        if (cellColumn > arena.size) {
             return true;
         }
 
@@ -291,7 +291,7 @@ class Canvas {
         const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);
         const cellRow = Math.floor((bottomLeft.y + object.speed) / CELL_SIZE);
 
-        if (cellRow >= arena.size) {
+        if (cellRow > arena.size) {
             return true;
         }
 

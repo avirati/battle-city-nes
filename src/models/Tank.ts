@@ -1,4 +1,5 @@
 import { Coordinate } from './Coordinate';
+import { getShellInstance } from './Shell';
 
 export enum TankDirection {
     RIGHT = 'RIGHT',
@@ -20,6 +21,7 @@ export interface ITank extends ITankProps {
     speed: number;
 
     move: (direction: TankDirection) => void;
+    fire: () => void;
     changeDirection: (direction: TankDirection) => void;
 }
 
@@ -54,4 +56,13 @@ export class Tank implements ITank {
     }
 
     public changeDirection = (direction: TankDirection) => this.direction = direction;
+
+    public fire = () => {
+        const shellPosition = this.getShellPosition();
+        return getShellInstance({ direction: this.direction, position: shellPosition });
+    }
+
+    private getShellPosition = (): Coordinate => {
+        return this.position;
+    }
 }

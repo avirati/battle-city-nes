@@ -34,6 +34,7 @@ module.exports = (env) => ({
         }),
         new webpack.DefinePlugin({
             __MODULE__: "'" + env.MODULE + "'",
+            __DEV__: env.ENVIRONMENT === 'DEV',
         }),
     ],
     resolve: {

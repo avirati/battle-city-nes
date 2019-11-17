@@ -18,7 +18,7 @@ class Canvas extends CanvasBase {
                 gameData[i] = [];
                 for (let j = 0; j < cellInformation.length; j++) {
                     const cell = cellInformation[i][j];
-                    gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y);
+                    gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, j, i);
                 }
             }
             this.setGameData(gameData);

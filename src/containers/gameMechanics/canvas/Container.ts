@@ -39,6 +39,10 @@ class Canvas {
             this.addKeyBindings();
             this.renderScene();
         });
+
+        if (__DEV__) {
+            this.addCellInspector();
+        }
     }
 
     public getCanvas = () => this.canvas;
@@ -177,7 +181,7 @@ class Canvas {
         const cellRow = Math.floor(topLeft.y / CELL_SIZE);
 
         for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
-            const cell = arena.matrix[cellColumn][cellRow - i];
+            const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && cell.willCollideWithTank()) {
                 return false;
             }
@@ -192,7 +196,7 @@ class Canvas {
         const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
         for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
-            const cell = arena.matrix[cellColumn][cellRow - i];
+            const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && cell.willCollideWithTank()) {
                 return false;
             }
@@ -233,6 +237,21 @@ class Canvas {
 
     private canMove = (direction: TankDirection): boolean =>
         this.isAtEdgeOfTheWorld(direction) && this.isCollidingWithObjects(direction)
+
+    private addCellInspector = () => {
+        this.getCanvas().addEventListener('mousemove', (event: MouseEvent) => {
+            const x = event.offsetX;
+            const y = event.offsetY;
+
+            const cellColumn = Math.floor(x / CELL_SIZE);
+            const cellRow = Math.floor(y / CELL_SIZE);
+
+            const cell = battleGround.getArena().matrix[cellColumn][cellRow];
+            if (cell) {
+                console.log(cell.toString());
+            }
+        });
+    }
 }
 
 export const canvas = new Canvas();

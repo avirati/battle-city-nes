@@ -341,8 +341,10 @@ class Canvas {
             const context = this.context!;
             const projectilesToDestroy: number[] = [];
             this.projectiles.forEach((shell, id) => {
-                if (!this.isWithinTheWorld(shell, SHELL_SIZE) || this.isCollidingWithWorld(shell)) {
+                const didImpact = this.isCollidingWithWorld(shell);
+                if (!this.isWithinTheWorld(shell, SHELL_SIZE) || didImpact) {
                     projectilesToDestroy.push(id);
+                    battleGround.registerImpactFrom(shell);
                 } else {
                     context.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
                     shell.move();

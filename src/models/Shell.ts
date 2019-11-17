@@ -65,6 +65,7 @@ export class Shell implements IShell {
     public getId = () => this.id;
 
     public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL].includes(cell.type);
+    public willDestroyCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE].includes(cell.type);
 }
 
 export const getShellInstance = ({ direction, position }: IShellProps) => new Shell({ direction, position, id: shellId++ });

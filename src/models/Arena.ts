@@ -8,6 +8,8 @@ import {
     CellType,
     ICell,
 } from './Cell';
+import { Shell } from './Shell';
+import { TankDirection } from './Tank';
 
 export interface IArena {
     matrix: ICell[][];
@@ -15,6 +17,7 @@ export interface IArena {
 
     exportArenaData: () => ICell[][];
     importArenaData: (matrix: ICell[][]) => void;
+    registerCellDestructionFrom: (shell: Shell) => void;
 }
 
 export class Arena implements IArena {
@@ -29,6 +32,26 @@ export class Arena implements IArena {
 
     public exportArenaData = (): ICell[][] => this.matrix;
     public importArenaData = (matrix: ICell[][]) => this.matrix = matrix;
+
+    public registerCellDestructionFrom = (shell: Shell): void => {
+        switch (shell.direction) {
+            case TankDirection.FORWARD:
+                this.impactedCellsInFront(shell);
+        }
+    }
+
+    private impactedCellsInFront = (shell: Shell) => {
+        const topLeft = shell.position;
+        const topRight = shell.position.changeX(shell.size);
+        [topLeft, topRight].map((extremety) => {
+            const cellColumn = Math.floor(extremety.x / CELL_SIZE);
+            const cellRow = Math.floor(extremety.y / CELL_SIZE);
+            const cell = this.matrix[cellColumn][cellRow - shell.occupiedCells];
+            if (shell.willDestroyCell(cell)) {
+                cell.type = CellType.EMPTY_BLACK;
+            }
+        });
+    }
 
     private fillWithEmptyCells = () => {
         for (let i = 0; i < this.size; i++) {

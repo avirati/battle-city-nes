@@ -1,5 +1,6 @@
 import { CanvasBase } from 'containers/base/canvas/Container';
 import { Cell, CellType, ICell } from 'models/Cell';
+import { Shell } from 'models/Shell';
 
 import { menu } from '../menu/Container';
 
@@ -25,6 +26,11 @@ class Canvas extends CanvasBase {
         });
     }
 
+    public registerImpactFrom = (shell: Shell) => {
+        this.getArena().registerCellDestructionFrom(shell);
+        this.renderScene();
+    }
+
     private downloadTextures = async (): Promise<void> => {
         const imagePromises = [
             this.getCellImage(CellType.BRICK),
@@ -40,14 +46,15 @@ class Canvas extends CanvasBase {
             steelImage,
             waterImage,
             eagleImage,
-            emptyImage,
+            emptyImageBlack,
         ] = await Promise.all(imagePromises);
         this.getImageMap().set(CellType.BRICK, brickImage);
         this.getImageMap().set(CellType.GRASS, grassImage);
         this.getImageMap().set(CellType.STEEL, steelImage);
         this.getImageMap().set(CellType.WATER, waterImage);
         this.getImageMap().set(CellType.EAGLE, eagleImage);
-        this.getImageMap().set(CellType.EMPTY, emptyImage);
+        this.getImageMap().set(CellType.EMPTY, emptyImageBlack);
+        this.getImageMap().set(CellType.EMPTY_BLACK, emptyImageBlack);
     }
 }
 

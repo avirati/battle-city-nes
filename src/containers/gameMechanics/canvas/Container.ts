@@ -211,18 +211,18 @@ class Canvas {
         });
     }
 
-    private isAtEdgeOfTheWorld = (direction: TankDirection): boolean => {
-        const tankPosition = this.tank.position;
+    private isWithinTheWorld = (object: Tank | Shell, objectSize: number): boolean => {
+        const position = object.position;
 
-        switch (direction) {
+        switch (object.direction) {
             case TankDirection.LEFT:
-                return tankPosition.x > 0;
+                return position.x > 0;
             case TankDirection.RIGHT:
-                return tankPosition.x < VIEWPORT_SIZE - TANK_SIZE;
+                return position.x < VIEWPORT_SIZE - objectSize;
             case TankDirection.FORWARD:
-                return tankPosition.y > 0;
+                return position.y > 0;
             case TankDirection.BACKWARD:
-                return tankPosition.y < VIEWPORT_SIZE - TANK_SIZE;
+                return position.y < VIEWPORT_SIZE - objectSize;
             default:
                 return false;
         }
@@ -303,7 +303,7 @@ class Canvas {
     }
 
     private canMove = (direction: TankDirection): boolean =>
-        this.isAtEdgeOfTheWorld(direction) && this.isCollidingWithObjects(direction)
+        this.isWithinTheWorld(this.tank, TANK_SIZE) && this.isCollidingWithObjects(direction)
 
     private addCellInspector = () => {
         this.getCanvas().addEventListener('mousemove', (event: MouseEvent) => {
@@ -323,16 +323,26 @@ class Canvas {
     private renderShellsForOneFrame = () => {
         if (this.projectiles.size > 0) {
             const context = this.context!;
-            this.projectiles.forEach((shell) => {
-                context.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
-                shell.move();
-                context.drawImage(
-                    this.shellSprites.get(this.tank.direction)!,
-                    shell.position.x,
-                    shell.position.y,
-                    SHELL_SIZE,
-                    SHELL_SIZE,
-                );
+            const projectilesToDestroy: number[] = [];
+            this.projectiles.forEach((shell, id) => {
+                if (!this.isWithinTheWorld(shell, SHELL_SIZE)) {
+                    projectilesToDestroy.push(id);
+                } else {
+                    context.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
+                    shell.move();
+                    context.drawImage(
+                        this.shellSprites.get(this.tank.direction)!,
+                        shell.position.x,
+                        shell.position.y,
+                        SHELL_SIZE,
+                        SHELL_SIZE,
+                    );
+                }
+            });
+
+            projectilesToDestroy.forEach((id) => {
+                console.log(`Deleting projectile with id ${id}`);
+                this.projectiles.delete(id);
             });
         }
     }

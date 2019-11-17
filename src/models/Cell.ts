@@ -18,8 +18,6 @@ export interface ICell {
     column: number;
     row: number;
 
-    willCollideWithTank: () => boolean;
-    willCollideWithTankShells: () => boolean;
     toString: () => string;
 }
 
@@ -37,10 +35,6 @@ export class Cell implements ICell {
         this.column = column;
         this.row = row;
     }
-
-    public willCollideWithTank = () => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(this.type);
-
-    public willCollideWithTankShells = () => [CellType.BRICK, CellType.EAGLE, CellType.STEEL].includes(this.type);
 
     public toString = () => `[${this.position.x}, ${this.position.y}][${this.column}, ${this.row}][${this.type}]`;
 }

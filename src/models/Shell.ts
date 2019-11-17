@@ -1,5 +1,6 @@
 import { SHELL_SIZE, SHELL_SIZE_IN_CELLS } from 'global/constants';
 
+import { Cell, CellType } from './Cell';
 import { Coordinate } from './Coordinate';
 import { TankDirection } from './Tank';
 
@@ -22,6 +23,8 @@ interface IShell extends IShellProps {
     occupiedCells: number;
 
     move: (direction: TankDirection) => void;
+    getId: () => number;
+    willCollideWithCell: (cell: Cell) => boolean;
 }
 
 export class Shell implements IShell {
@@ -60,6 +63,8 @@ export class Shell implements IShell {
     }
 
     public getId = () => this.id;
+
+    public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL].includes(cell.type);
 }
 
 export const getShellInstance = ({ direction, position }: IShellProps) => new Shell({ direction, position, id: shellId++ });

@@ -15,7 +15,6 @@ import {
     VIEWPORT_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
-import { ICoordinate } from 'models/Coordinate';
 import { Shell } from 'models/Shell';
 import { Tank, TankDirection } from 'models/Tank';
 
@@ -227,8 +226,11 @@ class Canvas {
         }
     }
 
-    private isCollidingForward = (topLeft: ICoordinate, objectSpeed: number, objectSize: number) => {
+    private isCollidingForward = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
+        const topLeft = object.position;
+        const objectSpeed = object.speed;
+        const objectSize = object.occupiedCells;
         const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
         const cellRow = Math.floor((topLeft.y - objectSpeed) / CELL_SIZE);
 
@@ -238,15 +240,18 @@ class Canvas {
 
         for (let i = 0; i <= objectSize; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
-            if (cell && cell.willCollideWithTank()) {
+            if (cell && object.willCollideWithCell(cell)) {
                 return true;
             }
         }
         return false;
     }
 
-    private isCollidingLeft = (topLeft: ICoordinate, objectSpeed: number, objectSize: number) => {
+    private isCollidingLeft = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
+        const topLeft = object.position;
+        const objectSpeed = object.speed;
+        const objectSize = object.occupiedCells;
         const cellColumn = Math.floor((topLeft.x - objectSpeed) / CELL_SIZE);
         const cellRow = Math.floor(topLeft.y / CELL_SIZE);
 
@@ -256,16 +261,19 @@ class Canvas {
 
         for (let i = 0; i <= objectSize; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
-            if (cell && cell.willCollideWithTank()) {
+            if (cell && object.willCollideWithCell(cell)) {
                 return true;
             }
         }
         return false;
     }
 
-    private isCollidingRight = (topLeft: ICoordinate, objectSpeed: number, objectSize: number) => {
+    private isCollidingRight = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
-        const topRight = topLeft.changeX(TANK_SIZE);
+        const topLeft = object.position;
+        const objectSpeed = object.speed;
+        const objectSize = object.occupiedCells;
+        const topRight = topLeft.changeX(object.size);
         const cellColumn = Math.floor((topRight.x + objectSpeed) / CELL_SIZE);
         const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
@@ -275,16 +283,19 @@ class Canvas {
 
         for (let i = 0; i <= objectSize; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
-            if (cell && cell.willCollideWithTank()) {
+            if (cell && object.willCollideWithCell(cell)) {
                 return true;
             }
         }
         return false;
     }
 
-    private isCollidingBackward = (topLeft: ICoordinate, objectSpeed: number, objectSize: number) => {
+    private isCollidingBackward = (object: Tank | Shell) => {
         const arena = battleGround.getArena();
-        const bottomLeft = topLeft.changeY(TANK_SIZE);
+        const topLeft = object.position;
+        const objectSpeed = object.speed;
+        const objectSize = object.occupiedCells;
+        const bottomLeft = topLeft.changeY(object.size);
         const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);
         const cellRow = Math.floor((bottomLeft.y + objectSpeed) / CELL_SIZE);
 
@@ -294,7 +305,7 @@ class Canvas {
 
         for (let i = 0; i <= objectSize; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
-            if (cell && cell.willCollideWithTank()) {
+            if (cell && object.willCollideWithCell(cell)) {
                 return true;
             }
         }
@@ -302,17 +313,15 @@ class Canvas {
     }
 
     private isCollidingWithWorld = (object: Tank | Shell) => {
-        const topLeft = object.position;
-
         switch (object.direction) {
             case TankDirection.FORWARD:
-                return this.isCollidingForward(topLeft, object.speed, object.occupiedCells);
+                return this.isCollidingForward(object);
             case TankDirection.LEFT:
-                return this.isCollidingLeft(topLeft, object.speed, object.occupiedCells);
+                return this.isCollidingLeft(object);
             case TankDirection.RIGHT:
-                return this.isCollidingRight(topLeft, object.speed, object.occupiedCells);
+                return this.isCollidingRight(object);
             case TankDirection.BACKWARD:
-                return this.isCollidingBackward(topLeft, object.speed, object.occupiedCells);
+                return this.isCollidingBackward(object);
         }
         return true;
     }

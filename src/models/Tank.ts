@@ -1,5 +1,6 @@
 import { SHELL_SIZE, TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
 
+import { Cell, CellType } from './Cell';
 import { Coordinate } from './Coordinate';
 import { getShellInstance } from './Shell';
 
@@ -27,6 +28,7 @@ export interface ITank extends ITankProps {
     move: (direction: TankDirection) => void;
     fire: () => void;
     changeDirection: (direction: TankDirection) => void;
+    willCollideWithCell: (cell: Cell) => boolean;
 }
 
 export class Tank implements ITank {
@@ -69,6 +71,8 @@ export class Tank implements ITank {
         const shellPosition = this.getShellPosition();
         return getShellInstance({ direction: this.direction, position: new Coordinate(shellPosition.x, shellPosition.y) });
     }
+
+    public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(cell.type);
 
     private getShellPosition = (): Coordinate => {
         switch (this.direction) {

@@ -169,7 +169,7 @@ class Canvas {
             switch (key) {
                 case 38: // UP Arrow
                     if (this.tank.direction === TankDirection.FORWARD) {
-                        if (this.canMove(TankDirection.FORWARD)) {
+                        if (this.canMove()) {
                             this.tank.move(TankDirection.FORWARD);
                         }
                     } else {
@@ -178,7 +178,7 @@ class Canvas {
                     break;
                 case 40: // DOWN Arrow
                     if (this.tank.direction === TankDirection.BACKWARD) {
-                        if (this.canMove(TankDirection.BACKWARD)) {
+                        if (this.canMove()) {
                             this.tank.move(TankDirection.BACKWARD);
                         }
                     } else {
@@ -187,7 +187,7 @@ class Canvas {
                     break;
                 case 39: // RIGHT Arrow
                     if (this.tank.direction === TankDirection.RIGHT) {
-                        if (this.canMove(TankDirection.RIGHT)) {
+                        if (this.canMove()) {
                             this.tank.move(TankDirection.RIGHT);
                         }
                     } else {
@@ -196,7 +196,7 @@ class Canvas {
                     break;
                 case 37:
                     if (this.tank.direction === TankDirection.LEFT) {
-                        if (this.canMove(TankDirection.LEFT)) {
+                        if (this.canMove()) {
                             this.tank.move(TankDirection.LEFT);
                         }
                     } else {
@@ -286,10 +286,10 @@ class Canvas {
         return true;
     }
 
-    private isCollidingWithObjects = (direction: TankDirection) => {
-        const topLeft = this.tank.position;
+    private isCollidingWithObjects = (object: Tank | Shell) => {
+        const topLeft = object.position;
 
-        switch (direction) {
+        switch (object.direction) {
             case TankDirection.FORWARD:
                 return this.isCollidingForward(topLeft);
             case TankDirection.LEFT:
@@ -302,8 +302,8 @@ class Canvas {
         return true;
     }
 
-    private canMove = (direction: TankDirection): boolean =>
-        this.isWithinTheWorld(this.tank, TANK_SIZE) && this.isCollidingWithObjects(direction)
+    private canMove = (): boolean =>
+        this.isWithinTheWorld(this.tank, TANK_SIZE) && this.isCollidingWithObjects(this.tank)
 
     private addCellInspector = () => {
         this.getCanvas().addEventListener('mousemove', (event: MouseEvent) => {

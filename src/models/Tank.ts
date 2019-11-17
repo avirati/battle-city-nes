@@ -59,7 +59,7 @@ export class Tank implements ITank {
 
     public fire = () => {
         const shellPosition = this.getShellPosition();
-        return getShellInstance({ direction: this.direction, position: shellPosition });
+        return getShellInstance({ direction: this.direction, position: new Coordinate(shellPosition.x, shellPosition.y) });
     }
 
     private getShellPosition = (): Coordinate => {

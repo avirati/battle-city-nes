@@ -1,3 +1,5 @@
+import { SHELL_SIZE, SHELL_SIZE_IN_CELLS } from 'global/constants';
+
 import { Coordinate } from './Coordinate';
 import { TankDirection } from './Tank';
 
@@ -16,6 +18,8 @@ interface IShellConstructorProps extends IShellProps {
 
 interface IShell extends IShellProps {
     speed: number;
+    size: number;
+    occupiedCells: number;
 
     move: (direction: TankDirection) => void;
 }
@@ -24,6 +28,9 @@ export class Shell implements IShell {
     public speed: number;
     public direction: TankDirection;
     public position: Coordinate;
+    public size: number;
+    public occupiedCells: number;
+
     private id: number;
 
     constructor({ direction, position, id }: IShellConstructorProps) {
@@ -31,6 +38,8 @@ export class Shell implements IShell {
         this.direction = direction;
         this.position = position;
         this.id = id;
+        this.size = SHELL_SIZE;
+        this.occupiedCells = SHELL_SIZE_IN_CELLS;
     }
 
     public move = () => {

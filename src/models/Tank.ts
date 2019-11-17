@@ -1,3 +1,5 @@
+import { TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
+
 import { Coordinate } from './Coordinate';
 import { getShellInstance } from './Shell';
 
@@ -19,6 +21,8 @@ export interface ITankProps {
 export interface ITank extends ITankProps {
     HP: number;
     speed: number;
+    size: number;
+    occupiedCells: number;
 
     move: (direction: TankDirection) => void;
     fire: () => void;
@@ -30,12 +34,16 @@ export class Tank implements ITank {
     public speed: number;
     public direction: TankDirection;
     public position: Coordinate;
+    public size: number;
+    public occupiedCells: number;
 
     constructor({ direction, position }: ITankProps) {
         this.HP = TANK_DEFAULT_HP;
         this.speed = TANK_DEFAULT_SPEED;
         this.direction = direction;
         this.position = position;
+        this.size = TANK_SIZE;
+        this.occupiedCells = TANK_SIZE_IN_CELLS;
     }
 
     public move = (direction: TankDirection) => {

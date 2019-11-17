@@ -6,6 +6,7 @@ export const TANK_SIZE = 48;
 export const ARENA_SIZE = VIEWPORT_SIZE / CELL_SIZE;
 export const TANK_SIZE_IN_CELLS = TANK_SIZE / CELL_SIZE;
 export const SHELL_SIZE = 16;
+export const SHELL_SIZE_IN_CELLS = SHELL_SIZE / CELL_SIZE;
 
 export const SHELL_FPS = 60;
 

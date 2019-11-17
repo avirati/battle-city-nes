@@ -37,6 +37,16 @@ export class Arena implements IArena {
         switch (shell.direction) {
             case TankDirection.FORWARD:
                 this.impactedCellsInFront(shell);
+                break;
+            case TankDirection.RIGHT:
+                this.impactedCellsInRight(shell);
+                break;
+            case TankDirection.BACKWARD:
+                this.impactedCellsInBack(shell);
+                break;
+            case TankDirection.LEFT:
+                this.impactedCellsInLeft(shell);
+                break;
         }
     }
 
@@ -46,9 +56,56 @@ export class Arena implements IArena {
         [topLeft, topRight].map((extremety) => {
             const cellColumn = Math.floor(extremety.x / CELL_SIZE);
             const cellRow = Math.floor(extremety.y / CELL_SIZE);
-            const cell = this.matrix[cellColumn][cellRow - shell.occupiedCells];
-            if (shell.willDestroyCell(cell)) {
-                cell.type = CellType.EMPTY_BLACK;
+            if (cellRow - shell.occupiedCells >= 0) {
+                const cell = this.matrix[cellColumn][cellRow - shell.occupiedCells];
+                if (cell && shell.willDestroyCell(cell)) {
+                    cell.type = CellType.EMPTY_BLACK;
+                }
+            }
+        });
+    }
+
+    private impactedCellsInRight = (shell: Shell) => {
+        const topRight = shell.position.changeX(shell.size);
+        const bottomLeft = topRight.changeY(shell.size);
+        [topRight, bottomLeft].map((extremety) => {
+            const cellColumn = Math.floor(extremety.x / CELL_SIZE);
+            const cellRow = Math.floor(extremety.y / CELL_SIZE);
+            if (cellColumn + shell.occupiedCells < this.size) {
+                const cell = this.matrix[cellColumn + shell.occupiedCells][cellRow];
+                if (cell && shell.willDestroyCell(cell)) {
+                    cell.type = CellType.EMPTY_BLACK;
+                }
+            }
+        });
+    }
+
+    private impactedCellsInBack = (shell: Shell) => {
+        const bottomLeft = shell.position.changeY(shell.size);
+        const bottomRight = bottomLeft.changeX(shell.size);
+        [bottomLeft, bottomRight].map((extremety) => {
+            const cellColumn = Math.floor(extremety.x / CELL_SIZE);
+            const cellRow = Math.floor(extremety.y / CELL_SIZE);
+            if (cellRow + shell.occupiedCells < this.size) {
+                const cell = this.matrix[cellColumn][cellRow + shell.occupiedCells];
+                if (cell && shell.willDestroyCell(cell)) {
+                    cell.type = CellType.EMPTY_BLACK;
+                }
+            }
+        });
+    }
+
+    private impactedCellsInLeft = (shell: Shell) => {
+        const topLeft = shell.position;
+        const bottomLeft = topLeft.changeY(shell.size);
+        [topLeft, bottomLeft].map((extremety) => {
+            const cellColumn = Math.floor(extremety.x / CELL_SIZE);
+            const cellRow = Math.floor(extremety.y / CELL_SIZE);
+            if (cellColumn - shell.occupiedCells >= 0) {
+                const cell = this.matrix[cellColumn - shell.occupiedCells][cellRow];
+                if (cell && shell.willDestroyCell(cell)) {
+                    cell.type = CellType.EMPTY_BLACK;
+                }
             }
         });
     }

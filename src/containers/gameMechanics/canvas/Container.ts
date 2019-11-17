@@ -47,8 +47,7 @@ class Canvas {
         this.downloadTextures()
         .then(() => {
             this.addKeyBindings();
-            this.renderScene();
-            this.startRenderingShells();
+            this.render();
         });
 
         if (__DEV__) {
@@ -146,9 +145,8 @@ class Canvas {
         this.shellSprites.set(TankDirection.LEFT, shellImageLeft);
     }
 
-    private renderScene = () => {
+    private renderTanksForOneFrame = () => {
         const context = this.context!;
-        this.clearScene();
         context.drawImage(
             this.tankSprites.get(this.tank.direction)!,
             this.tank.position.x,
@@ -162,8 +160,6 @@ class Canvas {
             context.lineWidth = 2;
             context.strokeRect(this.tank.position.x, this.tank.position.y, TANK_SIZE, TANK_SIZE);
         }
-
-        this.renderShellsForOneFrame();
     }
 
     private addKeyBindings = () => {
@@ -179,7 +175,6 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.FORWARD);
                     }
-                    this.renderScene();
                     break;
                 case 40: // DOWN Arrow
                     if (this.tank.direction === TankDirection.BACKWARD) {
@@ -189,7 +184,6 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.BACKWARD);
                     }
-                    this.renderScene();
                     break;
                 case 39: // RIGHT Arrow
                     if (this.tank.direction === TankDirection.RIGHT) {
@@ -199,7 +193,6 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.RIGHT);
                     }
-                    this.renderScene();
                     break;
                 case 37:
                     if (this.tank.direction === TankDirection.LEFT) {
@@ -209,7 +202,6 @@ class Canvas {
                     } else {
                         this.tank.changeDirection(TankDirection.LEFT);
                     }
-                    this.renderScene();
                     break;
 
                 case 32:
@@ -345,10 +337,13 @@ class Canvas {
         }
     }
 
-    private startRenderingShells = () => {
+    private render = () => {
         const shellRenderInterval = Math.round(1000 / SHELL_FPS);
-        this.renderShellsForOneFrame();
-        setInterval(this.renderShellsForOneFrame, shellRenderInterval);
+        setInterval(() => {
+            this.clearScene();
+            this.renderTanksForOneFrame();
+            this.renderShellsForOneFrame();
+        }, shellRenderInterval);
     }
 }
 

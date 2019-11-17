@@ -34,7 +34,7 @@ export class Arena implements IArena {
         for (let i = 0; i < this.size; i++) {
             this.matrix[i] = [];
             for (let j = 0; j < this.size; j++) {
-                this.matrix[i][j] = new Cell(CellType.EMPTY, i * CELL_SIZE, j * CELL_SIZE, j, i);
+                this.matrix[i][j] = new Cell(CellType.EMPTY, i * CELL_SIZE, j * CELL_SIZE, i, j);
             }
         }
     }

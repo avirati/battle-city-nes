@@ -20,6 +20,7 @@
     "dev": "webpack --watch",
     "build": "webpack",
     "level-designer": "webpack-dev-server --open --env.MODULE=LEVEL_DESIGNER --env.ENVIRONMENT=DEV",
-    "single-player": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER --env.ENVIRONMENT=DEV"
+    "single-player:dev": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER --env.ENVIRONMENT=DEV",
+    "single-player": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER"
   }
 }

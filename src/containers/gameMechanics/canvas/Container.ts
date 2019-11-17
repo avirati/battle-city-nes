@@ -99,14 +99,21 @@ class Canvas {
     }
 
     private renderScene = () => {
+        const context = this.context!;
         this.clearScene();
-        this.context!.drawImage(
+        context.drawImage(
             this.imageMap.get(this.tank.direction)!,
             this.tank.position.x,
             this.tank.position.y,
             TANK_SIZE,
             TANK_SIZE,
         );
+
+        if (__DEV__) {
+            context.strokeStyle = '#FFFFFF';
+            context.lineWidth = 2;
+            context.strokeRect(this.tank.position.x, this.tank.position.y, TANK_SIZE, TANK_SIZE);
+        }
     }
 
     private addKeyBindings = () => {
@@ -115,27 +122,39 @@ class Canvas {
 
             switch (key) {
                 case 38: // UP Arrow
-                    this.tank.changeDirection(TankDirection.FORWARD);
-                    if (this.canMove(TankDirection.FORWARD)) {
-                        this.tank.move(TankDirection.FORWARD);
+                    if (this.tank.direction === TankDirection.FORWARD) {
+                        if (this.canMove(TankDirection.FORWARD)) {
+                            this.tank.move(TankDirection.FORWARD);
+                        }
+                    } else {
+                        this.tank.changeDirection(TankDirection.FORWARD);
                     }
                     break;
                 case 40: // DOWN Arrow
-                    this.tank.changeDirection(TankDirection.BACKWARD);
-                    if (this.canMove(TankDirection.BACKWARD)) {
-                        this.tank.move(TankDirection.BACKWARD);
+                    if (this.tank.direction === TankDirection.BACKWARD) {
+                        if (this.canMove(TankDirection.BACKWARD)) {
+                            this.tank.move(TankDirection.BACKWARD);
+                        }
+                    } else {
+                        this.tank.changeDirection(TankDirection.BACKWARD);
                     }
                     break;
                 case 39: // RIGHT Arrow
-                    this.tank.changeDirection(TankDirection.RIGHT);
-                    if (this.canMove(TankDirection.RIGHT)) {
-                        this.tank.move(TankDirection.RIGHT);
+                    if (this.tank.direction === TankDirection.RIGHT) {
+                        if (this.canMove(TankDirection.RIGHT)) {
+                            this.tank.move(TankDirection.RIGHT);
+                        }
+                    } else {
+                        this.tank.changeDirection(TankDirection.RIGHT);
                     }
                     break;
                 case 37:
-                    this.tank.changeDirection(TankDirection.LEFT);
-                    if (this.canMove(TankDirection.LEFT)) {
-                        this.tank.move(TankDirection.LEFT);
+                    if (this.tank.direction === TankDirection.LEFT) {
+                        if (this.canMove(TankDirection.LEFT)) {
+                            this.tank.move(TankDirection.LEFT);
+                        }
+                    } else {
+                        this.tank.changeDirection(TankDirection.LEFT);
                     }
                     break;
             }
@@ -166,7 +185,7 @@ class Canvas {
         const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
         const cellRow = Math.floor((topLeft.y - this.tank.speed) / CELL_SIZE);
 
-        for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
+        for (let i = 0; i <= TANK_SIZE_IN_CELLS; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
             if (cell && cell.willCollideWithTank()) {
                 return false;
@@ -180,7 +199,7 @@ class Canvas {
         const cellColumn = Math.floor((topLeft.x - this.tank.speed) / CELL_SIZE);
         const cellRow = Math.floor(topLeft.y / CELL_SIZE);
 
-        for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
+        for (let i = 0; i <= TANK_SIZE_IN_CELLS; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && cell.willCollideWithTank()) {
                 return false;
@@ -195,7 +214,7 @@ class Canvas {
         const cellColumn = Math.floor((topRight.x + this.tank.speed) / CELL_SIZE);
         const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
-        for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
+        for (let i = 0; i <= TANK_SIZE_IN_CELLS; i++) {
             const cell = arena.matrix[cellColumn][cellRow + i];
             if (cell && cell.willCollideWithTank()) {
                 return false;
@@ -210,7 +229,7 @@ class Canvas {
         const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);
         const cellRow = Math.floor((bottomLeft.y + this.tank.speed) / CELL_SIZE);
 
-        for (let i = 0; i < TANK_SIZE_IN_CELLS; i++) {
+        for (let i = 0; i <= TANK_SIZE_IN_CELLS; i++) {
             const cell = arena.matrix[cellColumn + i][cellRow];
             if (cell && cell.willCollideWithTank()) {
                 return false;

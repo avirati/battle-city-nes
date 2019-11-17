@@ -37,21 +37,19 @@ export class Tank implements ITank {
     }
 
     public move = (direction: TankDirection) => {
-        if (this.direction === direction) { // Cant move in a different direction. Need to change direction first
-            switch (direction) {
-                case TankDirection.FORWARD:
-                    this.position.y -= this.speed;
-                    break;
-                case TankDirection.BACKWARD:
-                    this.position.y += this.speed;
-                    break;
-                case TankDirection.RIGHT:
-                    this.position.x += this.speed;
-                    break;
-                case TankDirection.LEFT:
-                    this.position.x -= this.speed;
-                    break;
-            }
+        switch (direction) {
+            case TankDirection.FORWARD:
+                this.position.y -= this.speed;
+                break;
+            case TankDirection.BACKWARD:
+                this.position.y += this.speed;
+                break;
+            case TankDirection.RIGHT:
+                this.position.x += this.speed;
+                break;
+            case TankDirection.LEFT:
+                this.position.x -= this.speed;
+                break;
         }
     }
 

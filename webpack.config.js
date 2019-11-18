@@ -4,6 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
 
+const getDistDirectory = (env) => env.MODULE === 'SINGLE_PLAYER' ? 'dist/single-player' : 'dist/level-designer';
+
 
 
 module.exports = (env) => ({
@@ -11,7 +13,7 @@ module.exports = (env) => ({
     entry: './src/index.ts',
     devtool: 'inline-source-map',
     devServer: {
-        contentBase: './dist',
+        contentBase: getDistDirectory(env),
     },
     module: {
         rules: [
@@ -46,10 +48,10 @@ module.exports = (env) => ({
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, getDistDirectory(env)),
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.join(__dirname, getDistDirectory(env)),
         compress: true,
         port: 9000
     }

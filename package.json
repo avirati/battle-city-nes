@@ -6,7 +6,9 @@
   "license": "MIT",
   "dependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^5.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "http-server": "^0.11.1",
     "ts-loader": "^6.2.0",
     "tslint": "^5.20.0",
     "tslint-react": "^4.1.0",
@@ -22,6 +24,7 @@
     "level-designer:dev": "webpack-dev-server --open --env.MODULE=LEVEL_DESIGNER --env.ENVIRONMENT=DEV",
     "single-player:dev": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER --env.ENVIRONMENT=DEV",
     "single-player": "webpack --env.MODULE=SINGLE_PLAYER",
-    "level-designer": "webpack --env.MODULE=LEVEL_DESIGNER"
+    "level-designer": "webpack --env.MODULE=LEVEL_DESIGNER",
+    "serve": "concurrently \"http-server dist/single-player -p 9000\" \"http-server dist/level-designer -p 9001\""
   }
 }

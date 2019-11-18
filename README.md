@@ -2,7 +2,7 @@
 
 Typescript implementation of the classic video game - Battle City (NES)
 
-![alt tag](https://raw.githubusercontent.com/avirati/battle-city/master/images/image1.png)
+![alt tag](https://raw.githubusercontent.com/avirati/battle-city-nes/master/images/image1.png)
 
 ### Features avaiable
 

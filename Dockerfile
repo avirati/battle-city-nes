@@ -1,8 +1,7 @@
 FROM node:10
 WORKDIR /usr/src/app
-COPY package*.json ./
+RUN git clone https://github.com/avirati/battle-city-nes ./
 RUN yarn
-COPY . .
 RUN yarn 'single-player'
 RUN yarn 'level-designer'
 EXPOSE 9000

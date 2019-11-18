@@ -52,8 +52,16 @@ export class Arena implements IArena {
 
     private impactedCellsInFront = (shell: Shell) => {
         const topLeft = shell.position;
-        const topRight = shell.position.changeX(shell.size);
-        [topLeft, topRight].map((extremety) => {
+        const topLeftOfLeft = topLeft.changeX(-shell.size);
+        const topRight = topLeft.changeX(shell.size);
+        const topRightOfRight = topRight.changeX(shell.size);
+        const cells = [
+            topLeftOfLeft,
+            topLeft,
+            topRight,
+            topRightOfRight,
+        ];
+        cells.map((extremety) => {
             const cellColumn = Math.floor(extremety.x / CELL_SIZE);
             const cellRow = Math.floor(extremety.y / CELL_SIZE);
             if (cellRow - shell.occupiedCells >= 0) {
@@ -67,8 +75,15 @@ export class Arena implements IArena {
 
     private impactedCellsInRight = (shell: Shell) => {
         const topRight = shell.position.changeX(shell.size);
+        const topRightAbove = topRight.changeY(-shell.size);
         const bottomLeft = topRight.changeY(shell.size);
-        [topRight, bottomLeft].map((extremety) => {
+        const bottomLeftBelow = bottomLeft.changeY(shell.size);
+        [
+            topRight,
+            topRightAbove,
+            bottomLeft,
+            bottomLeftBelow,
+        ].map((extremety) => {
             const cellColumn = Math.floor(extremety.x / CELL_SIZE);
             const cellRow = Math.floor(extremety.y / CELL_SIZE);
             if (cellColumn + shell.occupiedCells < this.size) {
@@ -82,8 +97,15 @@ export class Arena implements IArena {
 
     private impactedCellsInBack = (shell: Shell) => {
         const bottomLeft = shell.position.changeY(shell.size);
+        const bottomLeftOfLeft = bottomLeft.changeX(-shell.size);
         const bottomRight = bottomLeft.changeX(shell.size);
-        [bottomLeft, bottomRight].map((extremety) => {
+        const bottomRightOfRight = bottomRight.changeX(shell.size);
+        [
+            bottomLeft,
+            bottomLeftOfLeft,
+            bottomRight,
+            bottomRightOfRight,
+        ].map((extremety) => {
             const cellColumn = Math.floor(extremety.x / CELL_SIZE);
             const cellRow = Math.floor(extremety.y / CELL_SIZE);
             if (cellRow + shell.occupiedCells < this.size) {

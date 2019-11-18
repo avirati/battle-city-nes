@@ -25,6 +25,6 @@
     "single-player:dev": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER --env.ENVIRONMENT=DEV",
     "single-player": "webpack --env.MODULE=SINGLE_PLAYER",
     "level-designer": "webpack --env.MODULE=LEVEL_DESIGNER",
-    "serve": "concurrently \"http-server dist/single-player -p 9000\" \"http-server dist/level-designer -p 9001\""
+    "start": "yarn single-player && http-server dist/single-player -p $PORT"
   }
 }

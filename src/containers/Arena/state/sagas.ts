@@ -1,13 +1,23 @@
-import { takeLatest } from 'redux-saga/effects';
+import { put, takeLatest } from 'redux-saga/effects';
 
-import { ActionTypes } from './actions';
+import { ARENA_SIZE, CELL_SIZE } from 'global/constants';
+
+import { Cell, CellType, ICell } from '../models/Cell';
+import { generateEmptyArenaSuccess, ActionTypes } from './actions';
 
 function * watchForGenerateEmptyArena() {
     yield takeLatest(ActionTypes.GENERATE_EMPTY_ARENA, generateEmptyArena);
 }
 
 function * generateEmptyArena() {
-    console.log('generate empty arena');
+    const matrix: ICell[][] = [];
+    for (let i = 0; i < ARENA_SIZE; i++) {
+        matrix[i] = [];
+        for (let j = 0; j < ARENA_SIZE; j++) {
+            matrix[i][j] = new Cell(CellType.EMPTY, i * CELL_SIZE, j * CELL_SIZE, i, j);
+        }
+    }
+    yield put(generateEmptyArenaSuccess(matrix));
 }
 
 export const sagas = [

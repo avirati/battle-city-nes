@@ -1,14 +1,17 @@
-import { Actions } from './actions';
+import { Actions, ActionTypes } from './actions';
 import { IState } from './interfaces';
 
 export const initialState: IState = {
-    arena: {
-        cells: [],
-    },
+    cells: [],
 };
 
-export const reducer = (state: IState = initialState, action: Actions) => {
+export const reducer = (state: IState = initialState, action: Actions): IState => {
     switch (action.type) {
+        case ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS:
+            return {
+                ...state,
+                cells: action.data!.cells,
+            };
         default:
             return state;
     }

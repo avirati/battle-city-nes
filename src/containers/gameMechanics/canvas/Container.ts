@@ -1,3 +1,5 @@
+import { Shell } from 'containers/Arena/models/Shell';
+import { Tank, TankDirection } from 'containers/Arena/models/Tank';
 import {
     CELL_SIZE,
     SHELL_FPS,
@@ -15,8 +17,6 @@ import {
     VIEWPORT_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
-import { Shell } from 'models/Shell';
-import { Tank, TankDirection } from 'models/Tank';
 
 import { canvas as battleGround } from '../../singlePlayer/canvas/Container';
 

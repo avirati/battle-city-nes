@@ -1,5 +1,6 @@
 import { CELL_SIZE } from 'global/constants';
-import { Coordinate, ICoordinate } from 'models/Coordinate';
+
+import { Coordinate, ICoordinate } from './Coordinate';
 
 export enum CellType {
     EMPTY = 'EMPTY',

@@ -1,3 +1,4 @@
+import { CellType, ICell } from 'containers/Arena/models/Cell';
 import {
     BRICK_IMAGE,
     EMPTY_IMAGE,
@@ -5,7 +6,6 @@ import {
     STEEL_IMAGE,
     WATER_IMAGE,
 } from 'global/constants';
-import { CellType, ICell } from 'models/Cell';
 
 class Menu {
     private brickCreatorButton: HTMLImageElement;

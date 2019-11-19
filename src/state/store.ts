@@ -40,3 +40,5 @@ export const prepareStore = (): Store<IApplicationState> => {
 };
 
 export const store: Store<IApplicationState> = prepareStore();
+
+export const dispatch = store.dispatch;

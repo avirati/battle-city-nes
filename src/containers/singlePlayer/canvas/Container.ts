@@ -1,8 +1,6 @@
+import { CellType } from 'containers/Arena/models/Cell';
+import { Shell } from 'containers/Arena/models/Shell';
 import { CanvasBase } from 'containers/base/canvas/Container';
-import { Cell, CellType, ICell } from 'models/Cell';
-import { Shell } from 'models/Shell';
-
-import { menu } from '../menu/Container';
 
 class Canvas extends CanvasBase {
     constructor() {
@@ -11,18 +9,6 @@ class Canvas extends CanvasBase {
         this.downloadTextures()
         .then(() => {
             this.renderScene();
-        });
-
-        menu.setImportAction((cellInformation: ICell[][]) => {
-            const gameData: ICell[][] = [];
-            for (let i = 0; i < cellInformation.length; i++) {
-                gameData[i] = [];
-                for (let j = 0; j < cellInformation.length; j++) {
-                    const cell = cellInformation[i][j];
-                    gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, i, j);
-                }
-            }
-            this.setGameData(gameData);
         });
     }
 

@@ -1,8 +1,8 @@
+import { CellType, ICell } from 'containers/Arena/models/Cell';
 import { CanvasBase } from 'containers/base/canvas/Container';
 import {
     CELL_SIZE,
 } from 'global/constants';
-import { CellType, ICell } from 'models/Cell';
 
 import { menu } from '../menu/Container';
 

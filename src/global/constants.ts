@@ -1,4 +1,4 @@
-import { Coordinate } from 'models/Coordinate';
+import { Coordinate } from 'containers/Arena/models/Coordinate';
 
 export const VIEWPORT_SIZE = 800;
 export const CELL_SIZE = 16;

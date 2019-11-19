@@ -1,4 +1,6 @@
-import { ICell } from 'models/Cell';
+import { Cell, ICell } from 'containers/Arena/models/Cell';
+import { loadArenaMap } from 'containers/Arena/state/actions';
+import { dispatch } from 'state/store';
 
 class Menu {
     private importButton: HTMLInputElement;
@@ -14,11 +16,12 @@ class Menu {
         this.importButton.className = 'custom-btn';
 
         this.attachToParent();
+        this.listenOnMapImport();
     }
 
     public getContainer = () => this.container;
 
-    public setImportAction = (callback: (gameData: ICell[][]) => void) => {
+    private listenOnMapImport = () => {
         this.importButton.addEventListener('change', (event: any) => { // No type def present https://github.com/microsoft/TypeScript/issues/31816
             event.stopPropagation();
             const file: File = event.target.files[0];
@@ -33,7 +36,15 @@ class Menu {
                 const serialisedGameData = event.target!.result;
                 try {
                     const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
-                    callback(parsedGameData);
+                    const gameData: ICell[][] = [];
+                    for (let i = 0; i < parsedGameData.length; i++) {
+                        gameData[i] = [];
+                        for (let j = 0; j < parsedGameData.length; j++) {
+                            const cell = parsedGameData[i][j];
+                            gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, i, j);
+                        }
+                    }
+                    dispatch(loadArenaMap(gameData));
                 } catch (error) {
                     console.error('Invalid Game Data', error);
                 }

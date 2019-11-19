@@ -12,6 +12,12 @@ export const reducer = (state: IState = initialState, action: Actions): IState =
                 ...state,
                 cells: action.data!.cells,
             };
+
+        case ActionTypes.LOAD_ARENA_MAP:
+            return {
+                ...state,
+                cells: action.data!.cells,
+            };
         default:
             return state;
     }

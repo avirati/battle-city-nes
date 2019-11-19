@@ -6,6 +6,7 @@ import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Contain
 import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Container';
 import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
+import { store } from 'state/store';
 
 const renderLevelDesigner = (container: HTMLElement | null) => {
     if (!container) {
@@ -34,6 +35,8 @@ const startApp = () => {
     : renderSinglePlayerGame(
         document.getElementById('app'),
     );
+
+    console.log(store);
 };
 
 startApp();

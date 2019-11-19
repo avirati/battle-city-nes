@@ -8,6 +8,8 @@ import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container
 import { INVALID_CONTAINER_ID } from 'global/errors';
 import { store } from 'state/store';
 
+import { generateEmptyArena } from './state/actions';
+
 const renderLevelDesigner = (container: HTMLElement | null) => {
     if (!container) {
         throw new Error(INVALID_CONTAINER_ID);
@@ -22,6 +24,8 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
         throw new Error(INVALID_CONTAINER_ID);
     }
 
+    store.dispatch(generateEmptyArena());
+
     container.appendChild(singlePlayerCanvas.getCanvas());
     container.appendChild(gameMechanicsCanvas.getCanvas());
     container.appendChild(singlePlayerMenu.getContainer());
@@ -35,8 +39,6 @@ const startApp = () => {
     : renderSinglePlayerGame(
         document.getElementById('app'),
     );
-
-    console.log(store);
 };
 
 startApp();

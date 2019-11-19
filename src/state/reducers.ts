@@ -1,16 +1,6 @@
-import { IApplicationState, IReduxAction } from './interfaces';
-
-const initialState: IApplicationState = {
-    dummy: [],
-};
-
-const dummyReducer = (state: IApplicationState = initialState, action: IReduxAction): IApplicationState => {
-    switch (action.type) {
-        default:
-            return state;
-    }
-};
+import { NAME as ArenaReducerName } from 'containers/Arena/state/constants';
+import { reducer as ArenaReducer } from 'containers/Arena/state/reducers';
 
 export const reducers = {
-    dummy: dummyReducer,
+    [ArenaReducerName]: ArenaReducer,
 };

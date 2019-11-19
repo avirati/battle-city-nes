@@ -1,21 +1,16 @@
 import {
     all,
     fork,
-    takeLatest,
 } from 'redux-saga/effects';
 
-import { ActionTypes } from './actions';
+import { sagas as ArenaSagas } from 'containers/Arena/state/sagas';
 
-function * watchForGenerateEmptyArena() {
-    yield takeLatest(ActionTypes.GENERATE_EMPTY_ARENA, generateEmptyArena);
-}
+import { ISaga } from './interfaces';
 
-function * generateEmptyArena() {
-    console.log('generate empty arena');
-}
+const sagas: ISaga[] = [
+    ...ArenaSagas,
+];
 
 export default function * root() {
-    yield all([
-        fork(watchForGenerateEmptyArena),
-    ]);
+    yield all(sagas.map((saga) => fork(saga)));
 }

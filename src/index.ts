@@ -1,5 +1,6 @@
 /// <reference path='global/global.d.ts' />
 
+import { generateEmptyArena } from 'containers/Arena/state/actions';
 import { canvas as gameMechanicsCanvas } from 'containers/gameMechanics/canvas/Container';
 import { canvas as levelDesignerCanvas } from 'containers/levelDesigner/canvas/Container';
 import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Container';
@@ -7,8 +8,6 @@ import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Con
 import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 import { store } from 'state/store';
-
-import { generateEmptyArena } from './state/actions';
 
 const renderLevelDesigner = (container: HTMLElement | null) => {
     if (!container) {

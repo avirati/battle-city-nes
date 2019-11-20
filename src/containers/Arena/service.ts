@@ -15,7 +15,7 @@ import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
-import { changeCellType, setBrush } from './state/actions';
+import { changeCellType, setBrush, persistArenaToStore } from './state/actions';
 import { getActiveBrushSelector, getArenaMatrixSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -271,7 +271,12 @@ const setupMenu = () => {
 const prepareLevelDesigner = () => {
     const matrix = applySelector(getArenaMatrixSelector);
     canvas.addEventListener('mousedown', () => mouseMoving = true);
-    canvas.addEventListener('mouseup', () => mouseMoving = false);
+    canvas.addEventListener('mouseup', () => {
+        mouseMoving = false;
+
+        // send to store
+        dispatch(persistArenaToStore(matrix));
+    });
     canvas.addEventListener('mousemove', (event: MouseEvent) => {
         if (!mouseMoving) {
             return;
@@ -284,6 +289,7 @@ const prepareLevelDesigner = () => {
 
         const cell = matrix[cellColumn][cellRow];
         const activeBrush = applySelector(getActiveBrushSelector);
+        cell.type = activeBrush;
         context!.drawImage(
             imageMap.get(activeBrush)!,
             cell.position.x,

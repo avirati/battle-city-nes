@@ -6,6 +6,7 @@ export enum ActionTypes {
     FILL_ARENA_WITH = 'arena/FILL_ARENA_WITH',
     FILL_ARENA_WITH_SUCCESS = 'arena/FILL_ARENA_WITH_SUCCESS',
     LOAD_ARENA_MAP = 'arena/LOAD_ARENA_MAP',
+    PERSIST_ARENA_TO_STORE = 'arena/PERSIST_ARENA_TO_STORE',
 
     REGISTER_IMPACT_FROM_SHELL = 'arena/REGISTER_IMPACT_FROM_SHELL',
     CHANGE_CELL_TYPE = 'arena/CHANGE_CELL_TYPE',
@@ -30,6 +31,13 @@ export const loadArenaMap = (matrix: ICell[][]): IReduxAction<ActionTypes.LOAD_A
         matrix,
     },
     type: ActionTypes.LOAD_ARENA_MAP,
+});
+
+export const persistArenaToStore = (matrix: ICell[][]): IReduxAction<ActionTypes.PERSIST_ARENA_TO_STORE, { matrix: ICell[][] }> => ({
+    data: {
+        matrix,
+    },
+    type: ActionTypes.PERSIST_ARENA_TO_STORE,
 });
 
 export const registerImpactFromShell = (shell: Shell): IReduxAction<ActionTypes.REGISTER_IMPACT_FROM_SHELL, { shell: Shell }> => ({
@@ -57,4 +65,5 @@ export type Actions =
     | ReturnType<typeof registerImpactFromShell>
     | ReturnType<typeof changeCellType>
     | ReturnType<typeof setBrush>
+    | ReturnType<typeof persistArenaToStore>
     ;

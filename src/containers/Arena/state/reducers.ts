@@ -15,13 +15,8 @@ export const initialState: IArena = {
 export const reducer = (state: IState = initialState, action: Actions): IState => {
     switch (action.type) {
         case ActionTypes.FILL_ARENA_WITH_SUCCESS:
-            return {
-                ...state,
-                matrix: action.data!.matrix,
-                size: action.data!.matrix.length,
-            };
-
         case ActionTypes.LOAD_ARENA_MAP:
+        case ActionTypes.PERSIST_ARENA_TO_STORE:
             return {
                 ...state,
                 matrix: action.data!.matrix,

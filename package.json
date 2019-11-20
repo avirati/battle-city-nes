@@ -30,6 +30,6 @@
     "single-player:dev": "webpack-dev-server --open --env.MODULE=SINGLE_PLAYER --env.ENVIRONMENT=DEV",
     "single-player": "webpack --env.MODULE=SINGLE_PLAYER",
     "level-designer": "webpack --env.MODULE=LEVEL_DESIGNER",
-    "start": "yarn single-player && yarn level-designer http-server dist -p $PORT"
+    "start": "yarn single-player && yarn level-designer && http-server dist -p $PORT"
   }
 }

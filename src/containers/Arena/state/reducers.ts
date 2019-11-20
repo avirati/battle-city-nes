@@ -1,10 +1,14 @@
 import { IArena } from 'models/Arena';
+import { CellType } from 'models/Cell';
 
 import { Actions, ActionTypes } from './actions';
 import { IState } from './interfaces';
 
 export const initialState: IArena = {
     matrix: [],
+    meta: {
+        activeBrush: CellType.EMPTY,
+    },
     size: 0,
 };
 
@@ -32,6 +36,20 @@ export const reducer = (state: IState = initialState, action: Actions): IState =
                 ...state,
                 matrix: newMatrix,
             };
+
+        case ActionTypes.SET_BRUSH:
+            const newBrush = action.data!.cellType;
+            if (newBrush === state.meta.activeBrush) {
+                return state;
+            } else {
+                return {
+                    ...state,
+                    meta: {
+                        ...state.meta,
+                        activeBrush: newBrush,
+                    },
+                };
+            }
         default:
             return state;
     }

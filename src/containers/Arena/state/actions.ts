@@ -9,6 +9,8 @@ export enum ActionTypes {
 
     REGISTER_IMPACT_FROM_SHELL = 'arena/REGISTER_IMPACT_FROM_SHELL',
     CHANGE_CELL_TYPE = 'arena/CHANGE_CELL_TYPE',
+
+    SET_BRUSH = 'arena/SET_BRUSH',
 }
 
 export const fillArenaWith = (cellType: CellType): IReduxAction<ActionTypes.FILL_ARENA_WITH, { cellType: CellType }> => ({
@@ -43,10 +45,16 @@ export const changeCellType = (cell: Cell, newType: CellType): IReduxAction<Acti
     type: ActionTypes.CHANGE_CELL_TYPE,
 });
 
+export const setBrush = (cellType: CellType): IReduxAction<ActionTypes.SET_BRUSH, { cellType: CellType }> => ({
+    data: { cellType },
+    type: ActionTypes.SET_BRUSH,
+});
+
 export type Actions =
     | ReturnType<typeof fillArenaWith>
     | ReturnType<typeof fillArenaWithSuccess>
     | ReturnType<typeof loadArenaMap>
     | ReturnType<typeof registerImpactFromShell>
     | ReturnType<typeof changeCellType>
+    | ReturnType<typeof setBrush>
     ;

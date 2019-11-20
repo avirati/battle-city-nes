@@ -1,6 +1,6 @@
 /// <reference path='global/global.d.ts' />
 
-import { getArenaCanvas, initArenaView } from 'containers/Arena/service';
+import { getArenaCanvas, initArenaView, initLevelDesigner } from 'containers/Arena/service';
 import { fillArenaWith } from 'containers/Arena/state/actions';
 import { getTankViewCanvas, initTankView } from 'containers/Tanks/service';
 import { INVALID_CONTAINER_ID } from 'global/errors';
@@ -16,9 +16,8 @@ const renderLevelDesigner = (container: HTMLElement | null) => {
     store.dispatch(fillArenaWith(CellType.EMPTY));
 
     container.appendChild(getArenaCanvas());
-    initArenaView();
+    initLevelDesigner();
 
-    // container.appendChild(levelDesignerCanvas.getCanvas());
     // container.appendChild(levelDesignerMenu.getContainer());
 };
 

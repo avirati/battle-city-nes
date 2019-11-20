@@ -23,7 +23,7 @@ import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
 import { loadArenaMap, registerImpactFromShell } from '../Arena/state/actions';
-import { getArenaMatrix } from '../Arena/state/selectors';
+import { getArenaMatrixSelector } from '../Arena/state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
@@ -248,7 +248,7 @@ const isWithinTheWorld = (object: Tank | Shell, objectSize: number): boolean => 
 };
 
 const isCollidingForward = (object: Tank | Shell) => {
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     const topLeft = object.position;
     const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
     const cellRow = Math.floor((topLeft.y - object.speed) / CELL_SIZE);
@@ -267,7 +267,7 @@ const isCollidingForward = (object: Tank | Shell) => {
 };
 
 const isCollidingLeft = (object: Tank | Shell) => {
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     const topLeft = object.position;
     const cellColumn = Math.floor((topLeft.x - object.speed) / CELL_SIZE);
     const cellRow = Math.floor(topLeft.y / CELL_SIZE);
@@ -286,7 +286,7 @@ const isCollidingLeft = (object: Tank | Shell) => {
 };
 
 const isCollidingRight = (object: Tank | Shell) => {
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     const topLeft = object.position;
     const topRight = topLeft.changeX(object.size);
     const cellColumn = Math.floor((topRight.x + object.speed) / CELL_SIZE);
@@ -306,7 +306,7 @@ const isCollidingRight = (object: Tank | Shell) => {
 };
 
 const isCollidingBackward = (object: Tank | Shell) => {
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     const topLeft = object.position;
     const bottomLeft = topLeft.changeY(object.size);
     const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);

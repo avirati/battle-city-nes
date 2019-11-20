@@ -15,12 +15,14 @@ import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
-import { changeCellType } from './state/actions';
-import { getArenaMatrix } from './state/selectors';
+import { changeCellType, setBrush } from './state/actions';
+import { getActiveBrushSelector, getArenaMatrixSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+const menuContainer: HTMLElement | null = document.getElementById('menu');
 const imageMap: Map<string, HTMLImageElement> = new Map();
+let mouseMoving = false;
 
 const setSize = () => {
     const { width, height } = getScreenDimension();
@@ -33,31 +35,29 @@ const clearScene = () => {
     context!.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-const getCellImage = (cellType: CellType): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
-    const image = new Image();
+const getCellImage = (cellType: CellType): string => {
     switch (cellType) {
         case CellType.BRICK:
-            image.src = BRICK_IMAGE;
-            break;
+            return BRICK_IMAGE;
         case CellType.GRASS:
-            image.src = GRASS_IMAGE;
-            break;
+            return GRASS_IMAGE;
         case CellType.STEEL:
-            image.src = STEEL_IMAGE;
-            break;
+            return STEEL_IMAGE;
         case CellType.WATER:
-            image.src = WATER_IMAGE;
-            break;
+            return WATER_IMAGE;
         case CellType.EAGLE:
-            image.src = GRASS_IMAGE;
-            break;
+            return GRASS_IMAGE;
         case CellType.EMPTY:
-            image.src = EMPTY_IMAGE;
-            break;
+            return EMPTY_IMAGE;
         case CellType.EMPTY_BLACK:
-            image.src = EMPTY_BLACK_IMAGE;
-            break;
+            return EMPTY_BLACK_IMAGE;
     }
+};
+
+const fetchCellImage = (cellType: CellType): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.src = getCellImage(cellType);
 
     image.onload = () => resolve(image);
     image.onerror = (err) => reject(err);
@@ -75,13 +75,13 @@ const renderScene = (matrix: ICell[][]) => {
 
 const downloadTextures = async (): Promise<void> => {
     const imagePromises = [
-        getCellImage(CellType.BRICK),
-        getCellImage(CellType.GRASS),
-        getCellImage(CellType.STEEL),
-        getCellImage(CellType.WATER),
-        getCellImage(CellType.EAGLE),
-        getCellImage(CellType.EMPTY),
-        getCellImage(CellType.EMPTY_BLACK),
+        fetchCellImage(CellType.BRICK),
+        fetchCellImage(CellType.GRASS),
+        fetchCellImage(CellType.STEEL),
+        fetchCellImage(CellType.WATER),
+        fetchCellImage(CellType.EAGLE),
+        fetchCellImage(CellType.EMPTY),
+        fetchCellImage(CellType.EMPTY_BLACK),
     ];
     const [
         brickImage,
@@ -106,7 +106,7 @@ const impactedCellsInFront = (shell: Shell) => {
     const topLeftOfLeft = topLeft.changeX(-shell.size);
     const topRight = topLeft.changeX(shell.size);
     const topRightOfRight = topRight.changeX(shell.size);
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     const cells = [
         topLeftOfLeft,
         topLeft,
@@ -130,7 +130,7 @@ const impactedCellsInRight = (shell: Shell) => {
     const topRightAbove = topRight.changeY(-shell.size);
     const bottomLeft = topRight.changeY(shell.size);
     const bottomLeftBelow = bottomLeft.changeY(shell.size);
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     [
         topRight,
         topRightAbove,
@@ -153,7 +153,7 @@ const impactedCellsInBack = (shell: Shell) => {
     const bottomLeftOfLeft = bottomLeft.changeX(-shell.size);
     const bottomRight = bottomLeft.changeX(shell.size);
     const bottomRightOfRight = bottomRight.changeX(shell.size);
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     [
         bottomLeft,
         bottomLeftOfLeft,
@@ -174,7 +174,7 @@ const impactedCellsInBack = (shell: Shell) => {
 const impactedCellsInLeft = (shell: Shell) => {
     const topLeft = shell.position;
     const bottomLeft = topLeft.changeY(shell.size);
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     [topLeft, bottomLeft].map((extremety) => {
         const cellColumn = Math.floor(extremety.x / CELL_SIZE);
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
@@ -195,7 +195,7 @@ export const renderCell = (cell: Cell) => {
         cell.size,
         cell.size,
     );
-}
+};
 
 export const registerCellDestructionFrom = (shell: Shell): void => {
     switch (shell.direction) {
@@ -215,7 +215,7 @@ export const registerCellDestructionFrom = (shell: Shell): void => {
 };
 
 export const renderMatrix = () => {
-    const matrix = applySelector<ICell[][]>(getArenaMatrix);
+    const matrix = applySelector(getArenaMatrixSelector);
     renderScene(matrix);
 };
 
@@ -224,8 +224,80 @@ export const getArenaCanvas = () => canvas;
 export const initArenaView = () => {
     setSize();
     clearScene();
-    downloadTextures()
+    return downloadTextures()
     .then(() => {
         renderMatrix();
+    });
+};
+
+const onBrushSelected = (event: MouseEvent) => {
+    const img = event.target! as HTMLImageElement;
+    const cellType: CellType = img.getAttribute('data-cell-type') as CellType;
+    dispatch(setBrush(cellType));
+    menuContainer!.style.display = 'none';
+};
+
+const setupMenu = () => {
+    [
+        CellType.BRICK,
+        CellType.GRASS,
+        CellType.STEEL,
+        CellType.WATER,
+        CellType.EMPTY,
+    ].forEach((cellType) => {
+        const img = document.createElement('img');
+        img.setAttribute('data-cell-type', cellType);
+        img.src = getCellImage(cellType);
+        img.addEventListener('click', onBrushSelected);
+        menuContainer!.appendChild(img);
+    });
+
+    canvas.addEventListener('contextmenu', (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        menuContainer!.style.display = 'flex';
+        menuContainer!.style.left = event.clientX + 'px';
+        menuContainer!.style.top = event.clientY + 'px';
+        mouseMoving = false;
+    });
+
+    canvas.addEventListener('click', (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        menuContainer!.style.display = 'none';
+    });
+};
+
+const prepareLevelDesigner = () => {
+    const matrix = applySelector(getArenaMatrixSelector);
+    canvas.addEventListener('mousedown', () => mouseMoving = true);
+    canvas.addEventListener('mouseup', () => mouseMoving = false);
+    canvas.addEventListener('mousemove', (event: MouseEvent) => {
+        if (!mouseMoving) {
+            return;
+        }
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        const cellColumn = Math.floor(x / CELL_SIZE);
+        const cellRow = Math.floor(y / CELL_SIZE);
+
+        const cell = matrix[cellColumn][cellRow];
+        const activeBrush = applySelector(getActiveBrushSelector);
+        context!.drawImage(
+            imageMap.get(activeBrush)!,
+            cell.position.x,
+            cell.position.y,
+            cell.size,
+            cell.size,
+        );
+    });
+}
+
+export const initLevelDesigner = () => {
+    initArenaView()
+    .then(() => {
+        setupMenu();
+        prepareLevelDesigner();
     });
 };

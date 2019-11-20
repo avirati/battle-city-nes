@@ -14,6 +14,9 @@ import { TankDirection } from './Tank';
 export interface IArena {
     matrix: ICell[][];
     size: number;
+    meta: {
+        activeBrush: CellType
+    };
 }
 
 export class Arena implements IArena {

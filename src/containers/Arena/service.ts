@@ -7,11 +7,11 @@ import {
     WATER_IMAGE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
+import { IArena } from 'models/Arena';
+import { CellType, ICell } from 'models/Cell';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
-import { IArena } from './models/Arena';
-import { CellType, ICell } from './models/Cell';
 import { loadArenaMap } from './state/actions';
 import { getArenaMatrix } from './state/selectors';
 

@@ -16,7 +16,7 @@ import {
     VIEWPORT_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
-import { ICell, Cell } from 'models/Cell';
+import { Cell, ICell } from 'models/Cell';
 import { Shell } from 'models/Shell';
 import { Tank, TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';

@@ -1,6 +1,6 @@
 import { ForkEffect } from 'redux-saga/effects';
 
-import { IArena } from 'containers/Arena/models/Arena';
+import { IArena } from 'models/Arena';
 
 export interface IApplicationState {
     arena: IArena;

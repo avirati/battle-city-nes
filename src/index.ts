@@ -7,7 +7,6 @@ import { INVALID_CONTAINER_ID } from 'global/errors';
 import { CellType } from 'models/Cell';
 import { store } from 'state/store';
 
-
 const renderLevelDesigner = (container: HTMLElement | null) => {
     if (!container) {
         throw new Error(INVALID_CONTAINER_ID);
@@ -17,8 +16,6 @@ const renderLevelDesigner = (container: HTMLElement | null) => {
 
     container.appendChild(getArenaCanvas());
     initLevelDesigner();
-
-    // container.appendChild(levelDesignerMenu.getContainer());
 };
 
 const renderSinglePlayerGame = (container: HTMLElement | null) => {

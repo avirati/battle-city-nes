@@ -10,9 +10,7 @@ import { getScreenDimension } from 'helpers';
 import { IArena } from 'models/Arena';
 import { CellType, ICell } from 'models/Cell';
 import { applySelector } from 'state/services';
-import { dispatch } from 'state/store';
 
-import { loadArenaMap } from './state/actions';
 import { getArenaMatrix } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -102,54 +100,16 @@ const downloadTextures = async (): Promise<void> => {
     imageMap.set(CellType.EMPTY_BLACK, emptyImageBlack);
 };
 
-const addDragNDropListeners = () => {
-
-    const FileSelectHandler = (event: DragEvent) => {
-        event.stopPropagation();
-        event.preventDefault();
-        const file: File = event.dataTransfer!.files[0];
-
-        if (file.type !== 'application/json') {
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = (event: ProgressEvent<FileReader>) => {
-            const serialisedGameData = event.target!.result;
-            try {
-                const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
-                dispatch(loadArenaMap(parsedGameData));
-            } catch (error) {
-                console.error('Invalid Game Data', error);
-            }
-        };
-        // Read in the image file as a data URL.
-        reader.readAsText(file);
-    };
-
-    const FileDragHover = (event: DragEvent) => {
-        event.stopPropagation();
-        event.preventDefault();
-    };
-
-    canvas.addEventListener('dragover', FileDragHover, false);
-    canvas.addEventListener('dragleave', FileDragHover, false);
-    canvas.addEventListener('drop', FileSelectHandler, false);
-};
-
 export const renderMatrix = () => {
     const matrix = applySelector<ICell[][], IArena>(getArenaMatrix);
     renderScene(matrix);
 };
 
 export const getSinglePlayerViewCanvas = () => canvas;
-export const getSinglePlayerViewContext = () => context;
 
 export const initSinglePlayerView = () => {
     setSize();
     clearScene();
-    addDragNDropListeners();
     downloadTextures()
     .then(() => {
         renderMatrix();

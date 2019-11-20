@@ -9,6 +9,7 @@ import { generateEmptyArena } from 'containers/Arena/state/actions';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 import { store } from 'state/store';
 import { getSinglePlayerViewCanvas, initSinglePlayerView } from './containers/Arena/service';
+import { getTankViewCanvas, initTankView } from './containers/Tanks/service';
 
 // const renderLevelDesigner = (container: HTMLElement | null) => {
 //     if (!container) {
@@ -25,8 +26,12 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
     }
 
     store.dispatch(generateEmptyArena());
+
     container.appendChild(getSinglePlayerViewCanvas());
     initSinglePlayerView();
+
+    container.appendChild(getTankViewCanvas());
+    initTankView();
     // container.appendChild(singlePlayerCanvas.getCanvas());
     // container.appendChild(gameMechanicsCanvas.getCanvas());
     // container.appendChild(singlePlayerMenu.getContainer());

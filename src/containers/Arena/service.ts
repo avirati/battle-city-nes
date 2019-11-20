@@ -7,7 +7,6 @@ import {
     WATER_IMAGE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
-import { IArena } from 'models/Arena';
 import { CellType, ICell } from 'models/Cell';
 import { applySelector } from 'state/services';
 
@@ -101,7 +100,7 @@ const downloadTextures = async (): Promise<void> => {
 };
 
 export const renderMatrix = () => {
-    const matrix = applySelector<ICell[][], IArena>(getArenaMatrix);
+    const matrix = applySelector<ICell[][]>(getArenaMatrix);
     renderScene(matrix);
 };
 

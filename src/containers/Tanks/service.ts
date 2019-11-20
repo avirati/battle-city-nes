@@ -13,14 +13,17 @@ import {
     TANK_SIZE,
     TANK_SPAWN_POSITION_BOTTOM_LEFT,
     VIEWPORT_SIZE,
+    ARENA_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
 import { ICell } from 'models/Cell';
 import { Shell } from 'models/Shell';
 import { Tank, TankDirection } from 'models/Tank';
 import { dispatch } from 'state/store';
+import { applySelector } from 'state/services';
 
 import { loadArenaMap } from '../Arena/state/actions';
+import { getArenaMatrix } from '../Arena/state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
@@ -245,7 +248,7 @@ const isWithinTheWorld = (object: Tank | Shell, objectSize: number): boolean => 
 };
 
 const isCollidingForward = (object: Tank | Shell) => {
-    const arena = battleGround.getArena();
+    const matrix = applySelector<ICell[][]>(getArenaMatrix);
     const topLeft = object.position;
     const cellColumn = Math.floor(topLeft.x / CELL_SIZE);
     const cellRow = Math.floor((topLeft.y - object.speed) / CELL_SIZE);
@@ -255,7 +258,7 @@ const isCollidingForward = (object: Tank | Shell) => {
     }
 
     for (let i = 0; i <= object.occupiedCells; i++) {
-        const cell = arena.matrix[cellColumn + i][cellRow];
+        const cell = matrix[cellColumn + i][cellRow];
         if (cell && object.willCollideWithCell(cell)) {
             return true;
         }
@@ -264,7 +267,7 @@ const isCollidingForward = (object: Tank | Shell) => {
 };
 
 const isCollidingLeft = (object: Tank | Shell) => {
-    const arena = battleGround.getArena();
+    const matrix = applySelector<ICell[][]>(getArenaMatrix);
     const topLeft = object.position;
     const cellColumn = Math.floor((topLeft.x - object.speed) / CELL_SIZE);
     const cellRow = Math.floor(topLeft.y / CELL_SIZE);
@@ -274,7 +277,7 @@ const isCollidingLeft = (object: Tank | Shell) => {
     }
 
     for (let i = 0; i <= object.occupiedCells; i++) {
-        const cell = arena.matrix[cellColumn][cellRow + i];
+        const cell = matrix[cellColumn][cellRow + i];
         if (cell && object.willCollideWithCell(cell)) {
             return true;
         }
@@ -283,18 +286,18 @@ const isCollidingLeft = (object: Tank | Shell) => {
 };
 
 const isCollidingRight = (object: Tank | Shell) => {
-    const arena = battleGround.getArena();
+    const matrix = applySelector<ICell[][]>(getArenaMatrix);
     const topLeft = object.position;
     const topRight = topLeft.changeX(object.size);
     const cellColumn = Math.floor((topRight.x + object.speed) / CELL_SIZE);
     const cellRow = Math.floor(topRight.y / CELL_SIZE);
 
-    if (cellColumn >= arena.size) {
+    if (cellColumn >= ARENA_SIZE) {
         return true;
     }
 
     for (let i = 0; i <= object.occupiedCells; i++) {
-        const cell = arena.matrix[cellColumn][cellRow + i];
+        const cell = matrix[cellColumn][cellRow + i];
         if (cell && object.willCollideWithCell(cell)) {
             return true;
         }
@@ -303,18 +306,18 @@ const isCollidingRight = (object: Tank | Shell) => {
 };
 
 const isCollidingBackward = (object: Tank | Shell) => {
-    const arena = battleGround.getArena();
+    const matrix = applySelector<ICell[][]>(getArenaMatrix);
     const topLeft = object.position;
     const bottomLeft = topLeft.changeY(object.size);
     const cellColumn = Math.floor(bottomLeft.x / CELL_SIZE);
     const cellRow = Math.floor((bottomLeft.y + object.speed) / CELL_SIZE);
 
-    if (cellRow >= arena.size) {
+    if (cellRow >= ARENA_SIZE) {
         return true;
     }
 
     for (let i = 0; i <= object.occupiedCells; i++) {
-        const cell = arena.matrix[cellColumn + i][cellRow];
+        const cell = matrix[cellColumn + i][cellRow];
         if (cell && object.willCollideWithCell(cell)) {
             return true;
         }

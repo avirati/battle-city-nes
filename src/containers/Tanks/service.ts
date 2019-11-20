@@ -1,4 +1,5 @@
 import {
+    ARENA_SIZE,
     CELL_SIZE,
     SHELL_FPS,
     SHELL_IMAGE_BACKWARD,
@@ -13,16 +14,15 @@ import {
     TANK_SIZE,
     TANK_SPAWN_POSITION_BOTTOM_LEFT,
     VIEWPORT_SIZE,
-    ARENA_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
-import { ICell } from 'models/Cell';
+import { ICell, Cell } from 'models/Cell';
 import { Shell } from 'models/Shell';
 import { Tank, TankDirection } from 'models/Tank';
-import { dispatch } from 'state/store';
 import { applySelector } from 'state/services';
+import { dispatch } from 'state/store';
 
-import { loadArenaMap } from '../Arena/state/actions';
+import { loadArenaMap, registerImpactFromShell } from '../Arena/state/actions';
 import { getArenaMatrix } from '../Arena/state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -206,7 +206,7 @@ const renderShellsForOneFrame = () => {
             const didImpact = isCollidingWithWorld(shell);
             if (!isWithinTheWorld(shell, SHELL_SIZE) || didImpact) {
                 projectilesToDestroy.push(id);
-                battleGround.registerImpactFrom(shell);
+                dispatch(registerImpactFromShell(shell));
             } else {
                 context!.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
                 shell.move();
@@ -356,7 +356,15 @@ const addDragNDropListeners = () => {
             const serialisedGameData = event.target!.result;
             try {
                 const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
-                dispatch(loadArenaMap(parsedGameData));
+                const gameData: ICell[][] = [];
+                for (let i = 0; i < parsedGameData.length; i++) {
+                    gameData[i] = [];
+                    for (let j = 0; j < parsedGameData.length; j++) {
+                        const cell = parsedGameData[i][j];
+                        gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, i, j);
+                    }
+                }
+                dispatch(loadArenaMap(gameData));
             } catch (error) {
                 console.error('Invalid Game Data', error);
             }

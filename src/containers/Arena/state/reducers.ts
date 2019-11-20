@@ -1,4 +1,5 @@
-import { IArena } from '../models/Arena';
+import { IArena } from 'models/Arena';
+
 import { Actions, ActionTypes } from './actions';
 import { IState } from './interfaces';
 
@@ -21,6 +22,15 @@ export const reducer = (state: IState = initialState, action: Actions): IState =
                 ...state,
                 matrix: action.data!.matrix,
                 size: action.data!.matrix.length,
+            };
+
+        case ActionTypes.CHANGE_CELL_TYPE:
+            const newMatrix = [...state.matrix];
+            const { cell, newType } = action.data!;
+            newMatrix[cell.column][cell.row].type = newType;
+            return {
+                ...state,
+                matrix: newMatrix,
             };
         default:
             return state;

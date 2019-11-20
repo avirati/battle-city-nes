@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect';
 
+import { IArena } from 'models/Arena';
 import { IApplicationState } from 'state/interfaces';
 
-import { IArena } from '../models/Arena';
 
 export const arenaState = (state: IApplicationState): IArena => state.arena;
 

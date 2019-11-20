@@ -15,6 +15,7 @@ import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
+import { parseSerialisedMatrix, serialiseMatrix } from './helper';
 import {
     changeCellType,
     loadArenaMap,
@@ -272,10 +273,10 @@ const setupMenu = () => {
     exportButton.addEventListener('click', (event: MouseEvent) => {
         event.stopPropagation();
         const matrix = applySelector(getArenaMatrixSelector);
-        const serialisedGameData = JSON.stringify(matrix);
+        const serialisedGameData = serialiseMatrix(matrix);
 
         const link = document.createElement('a');
-        link.download = 'level.json';
+        link.download = `${Date.now()}.level`;
         const blob = new Blob([serialisedGameData], { type: 'text/plain' });
         link.href = window.URL.createObjectURL(blob);
         link.click();
@@ -322,7 +323,7 @@ const addDragNDropListeners = () => {
         event.preventDefault();
         const file: File = event.dataTransfer!.files[0];
 
-        if (file.type !== 'application/json') {
+        if (file.name.toLowerCase().indexOf('.level') === -1) {
             return;
         }
 
@@ -331,15 +332,7 @@ const addDragNDropListeners = () => {
         reader.onload = (event: ProgressEvent<FileReader>) => {
             const serialisedGameData = event.target!.result;
             try {
-                const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
-                const gameData: ICell[][] = [];
-                for (let i = 0; i < parsedGameData.length; i++) {
-                    gameData[i] = [];
-                    for (let j = 0; j < parsedGameData.length; j++) {
-                        const cell = parsedGameData[i][j];
-                        gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, i, j);
-                    }
-                }
+                const gameData = parseSerialisedMatrix(serialisedGameData as string);
                 dispatch(loadArenaMap(gameData));
             } catch (error) {
                 console.error('Invalid Game Data', error);

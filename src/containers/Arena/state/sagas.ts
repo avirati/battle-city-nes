@@ -3,6 +3,7 @@ import { put, takeLatest } from 'redux-saga/effects';
 import { ARENA_SIZE, CELL_SIZE } from 'global/constants';
 
 import { Cell, CellType, ICell } from '../models/Cell';
+import { renderMatrix } from '../service';
 import { generateEmptyArenaSuccess, ActionTypes } from './actions';
 
 function * watchForGenerateEmptyArena() {
@@ -20,6 +21,15 @@ function * generateEmptyArena() {
     yield put(generateEmptyArenaSuccess(matrix));
 }
 
+function * watchForLoanArenaMap() {
+    yield takeLatest(ActionTypes.LOAD_ARENA_MAP, loadArenaMapSaga);
+}
+
+function * loadArenaMapSaga() {
+    renderMatrix();
+}
+
 export const sagas = [
     watchForGenerateEmptyArena,
+    watchForLoanArenaMap,
 ];

@@ -1,13 +1,14 @@
 /// <reference path='global/global.d.ts' />
 
 import { generateEmptyArena } from 'containers/Arena/state/actions';
-import { canvas as gameMechanicsCanvas } from 'containers/gameMechanics/canvas/Container';
+// import { canvas as gameMechanicsCanvas } from 'containers/gameMechanics/canvas/Container';
 // import { canvas as levelDesignerCanvas } from 'containers/levelDesigner/canvas/Container';
 // import { menu as levelDesignerMenu } from 'containers/levelDesigner/menu/Container';
-import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Container';
-import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container';
+// import { canvas as singlePlayerCanvas } from 'containers/singlePlayer/canvas/Container';
+// import { menu as singlePlayerMenu } from 'containers/singlePlayer/menu/Container';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 import { store } from 'state/store';
+import { getSinglePlayerViewCanvas, initSinglePlayerView } from './containers/Arena/service';
 
 // const renderLevelDesigner = (container: HTMLElement | null) => {
 //     if (!container) {
@@ -24,10 +25,11 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
     }
 
     store.dispatch(generateEmptyArena());
-
-    container.appendChild(singlePlayerCanvas.getCanvas());
-    container.appendChild(gameMechanicsCanvas.getCanvas());
-    container.appendChild(singlePlayerMenu.getContainer());
+    container.appendChild(getSinglePlayerViewCanvas());
+    initSinglePlayerView();
+    // container.appendChild(singlePlayerCanvas.getCanvas());
+    // container.appendChild(gameMechanicsCanvas.getCanvas());
+    // container.appendChild(singlePlayerMenu.getContainer());
 };
 
 const startApp = () => {

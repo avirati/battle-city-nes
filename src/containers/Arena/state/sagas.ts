@@ -1,7 +1,7 @@
 import { put, select, takeEvery, takeLatest, } from 'redux-saga/effects';
 
 import { ARENA_SIZE, CELL_SIZE } from 'global/constants';
-import { Cell, CellType, ICell } from 'models/Cell';
+import { Cell, ICell } from 'models/Cell';
 
 import {
     registerCellDestructionFrom,
@@ -15,7 +15,7 @@ import {
     registerImpactFromShell,
     ActionTypes,
 } from './actions';
-import { getArenaMatrix } from './selectors';
+import { getArenaMatrixSelector } from './selectors';
 
 function * watchForfillArenaWith() {
     yield takeLatest(ActionTypes.FILL_ARENA_WITH, fillArenaWithSaga);
@@ -55,7 +55,7 @@ function * watchForChangeCellType() {
 }
 
 function * reRenderCell(action: ReturnType<typeof changeCellType>) {
-    const matrix: ICell[][] = yield select(getArenaMatrix);
+    const matrix: ICell[][] = yield select(getArenaMatrixSelector);
     const { cell } = action.data!;
     const changedCell = matrix[cell.column][cell.row];
     renderCell(changedCell);

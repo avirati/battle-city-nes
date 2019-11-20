@@ -15,7 +15,7 @@ import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
-import { changeCellType, setBrush, persistArenaToStore } from './state/actions';
+import { changeCellType, persistArenaToStore, setBrush } from './state/actions';
 import { getActiveBrushSelector, getArenaMatrixSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -266,6 +266,21 @@ const setupMenu = () => {
         event.stopPropagation();
         menuContainer!.style.display = 'none';
     });
+
+    const exportButton = document.createElement('button');
+    exportButton.innerText = 'Export';
+    exportButton.addEventListener('click', (event: MouseEvent) => {
+        event.stopPropagation();
+        const matrix = applySelector(getArenaMatrixSelector);
+        const serialisedGameData = JSON.stringify(matrix);
+
+        const link = document.createElement('a');
+        link.download = 'level.json';
+        const blob = new Blob([serialisedGameData], { type: 'text/plain' });
+        link.href = window.URL.createObjectURL(blob);
+        link.click();
+    });
+    menuContainer!.appendChild(exportButton);
 };
 
 const prepareLevelDesigner = () => {
@@ -298,7 +313,7 @@ const prepareLevelDesigner = () => {
             cell.size,
         );
     });
-}
+};
 
 export const initLevelDesigner = () => {
     initArenaView()

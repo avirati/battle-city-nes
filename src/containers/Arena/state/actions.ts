@@ -3,23 +3,24 @@ import { Shell } from 'models/Shell';
 import { IReduxAction } from 'state/interfaces';
 
 export enum ActionTypes {
-    GENERATE_EMPTY_ARENA = 'arena/GENERATE_EMPTY_ARENA',
-    GENERATE_EMPTY_ARENA_SUCCESS = 'arena/GENERATE_EMPTY_ARENA_SUCCESS',
+    FILL_ARENA_WITH = 'arena/FILL_ARENA_WITH',
+    FILL_ARENA_WITH_SUCCESS = 'arena/FILL_ARENA_WITH_SUCCESS',
     LOAD_ARENA_MAP = 'arena/LOAD_ARENA_MAP',
 
     REGISTER_IMPACT_FROM_SHELL = 'arena/REGISTER_IMPACT_FROM_SHELL',
     CHANGE_CELL_TYPE = 'arena/CHANGE_CELL_TYPE',
 }
 
-export const generateEmptyArena = (): IReduxAction<ActionTypes.GENERATE_EMPTY_ARENA, void> => ({
-    type: ActionTypes.GENERATE_EMPTY_ARENA,
+export const fillArenaWith = (cellType: CellType): IReduxAction<ActionTypes.FILL_ARENA_WITH, { cellType: CellType }> => ({
+    data: { cellType },
+    type: ActionTypes.FILL_ARENA_WITH,
 });
 
-export const generateEmptyArenaSuccess = (matrix: ICell[][]): IReduxAction<ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS, { matrix: ICell[][] }> => ({
+export const fillArenaWithSuccess = (matrix: ICell[][]): IReduxAction<ActionTypes.FILL_ARENA_WITH_SUCCESS, { matrix: ICell[][] }> => ({
     data: {
         matrix,
     },
-    type: ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS,
+    type: ActionTypes.FILL_ARENA_WITH_SUCCESS,
 });
 
 export const loadArenaMap = (matrix: ICell[][]): IReduxAction<ActionTypes.LOAD_ARENA_MAP, { matrix: ICell[][] }> => ({
@@ -43,8 +44,8 @@ export const changeCellType = (cell: Cell, newType: CellType): IReduxAction<Acti
 });
 
 export type Actions =
-    | ReturnType<typeof generateEmptyArena>
-    | ReturnType<typeof generateEmptyArenaSuccess>
+    | ReturnType<typeof fillArenaWith>
+    | ReturnType<typeof fillArenaWithSuccess>
     | ReturnType<typeof loadArenaMap>
     | ReturnType<typeof registerImpactFromShell>
     | ReturnType<typeof changeCellType>

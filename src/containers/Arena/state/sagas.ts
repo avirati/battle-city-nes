@@ -3,23 +3,34 @@ import { put, select, takeEvery, takeLatest, } from 'redux-saga/effects';
 import { ARENA_SIZE, CELL_SIZE } from 'global/constants';
 import { Cell, CellType, ICell } from 'models/Cell';
 
-import { registerCellDestructionFrom, renderCell, renderMatrix } from '../service';
-import { changeCellType, generateEmptyArenaSuccess, registerImpactFromShell, ActionTypes } from './actions';
+import {
+    registerCellDestructionFrom,
+    renderCell,
+    renderMatrix,
+} from '../service';
+import {
+    changeCellType,
+    fillArenaWith,
+    fillArenaWithSuccess,
+    registerImpactFromShell,
+    ActionTypes,
+} from './actions';
 import { getArenaMatrix } from './selectors';
 
-function * watchForGenerateEmptyArena() {
-    yield takeLatest(ActionTypes.GENERATE_EMPTY_ARENA, generateEmptyArena);
+function * watchForfillArenaWith() {
+    yield takeLatest(ActionTypes.FILL_ARENA_WITH, fillArenaWithSaga);
 }
 
-function * generateEmptyArena() {
+function * fillArenaWithSaga(action: ReturnType<typeof fillArenaWith>) {
     const matrix: ICell[][] = [];
+    const { cellType } = action.data!;
     for (let i = 0; i < ARENA_SIZE; i++) {
         matrix[i] = [];
         for (let j = 0; j < ARENA_SIZE; j++) {
-            matrix[i][j] = new Cell(CellType.EMPTY, i * CELL_SIZE, j * CELL_SIZE, i, j);
+            matrix[i][j] = new Cell(cellType, i * CELL_SIZE, j * CELL_SIZE, i, j);
         }
     }
-    yield put(generateEmptyArenaSuccess(matrix));
+    yield put(fillArenaWithSuccess(matrix));
 }
 
 function * watchForLoanArenaMap() {
@@ -51,7 +62,7 @@ function * reRenderCell(action: ReturnType<typeof changeCellType>) {
 }
 
 export const sagas = [
-    watchForGenerateEmptyArena,
+    watchForfillArenaWith,
     watchForLoanArenaMap,
     watchForRegisterImpactFromShell,
     watchForChangeCellType,

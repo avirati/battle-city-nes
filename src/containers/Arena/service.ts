@@ -80,6 +80,7 @@ const downloadTextures = async (): Promise<void> => {
         getCellImage(CellType.STEEL),
         getCellImage(CellType.WATER),
         getCellImage(CellType.EAGLE),
+        getCellImage(CellType.EMPTY),
         getCellImage(CellType.EMPTY_BLACK),
     ];
     const [
@@ -88,6 +89,7 @@ const downloadTextures = async (): Promise<void> => {
         steelImage,
         waterImage,
         eagleImage,
+        emptyImage,
         emptyImageBlack,
     ] = await Promise.all(imagePromises);
     imageMap.set(CellType.BRICK, brickImage);
@@ -95,7 +97,7 @@ const downloadTextures = async (): Promise<void> => {
     imageMap.set(CellType.STEEL, steelImage);
     imageMap.set(CellType.WATER, waterImage);
     imageMap.set(CellType.EAGLE, eagleImage);
-    imageMap.set(CellType.EMPTY, emptyImageBlack);
+    imageMap.set(CellType.EMPTY, emptyImage);
     imageMap.set(CellType.EMPTY_BLACK, emptyImageBlack);
 };
 
@@ -217,9 +219,9 @@ export const renderMatrix = () => {
     renderScene(matrix);
 };
 
-export const getSinglePlayerViewCanvas = () => canvas;
+export const getArenaCanvas = () => canvas;
 
-export const initSinglePlayerView = () => {
+export const initArenaView = () => {
     setSize();
     clearScene();
     downloadTextures()

@@ -3,7 +3,7 @@ import {
     BRICK_IMAGE,
     CELL_SIZE,
     EMPTY_BLACK_IMAGE,
-    EMPTY_IMAGE,
+    EMPTY_WHITE_IMAGE,
     GRASS_IMAGE,
     STEEL_IMAGE,
     WATER_IMAGE,
@@ -48,9 +48,7 @@ const getCellImage = (cellType: CellType): string => {
         case CellType.EAGLE:
             return GRASS_IMAGE;
         case CellType.EMPTY:
-            return EMPTY_IMAGE;
-        case CellType.EMPTY_BLACK:
-            return EMPTY_BLACK_IMAGE;
+            return __MODULE__ === 'LEVEL_DESIGNER' ? EMPTY_WHITE_IMAGE : EMPTY_BLACK_IMAGE;
     }
 };
 
@@ -81,7 +79,6 @@ const downloadTextures = async (): Promise<void> => {
         fetchCellImage(CellType.WATER),
         fetchCellImage(CellType.EAGLE),
         fetchCellImage(CellType.EMPTY),
-        fetchCellImage(CellType.EMPTY_BLACK),
     ];
     const [
         brickImage,
@@ -90,7 +87,6 @@ const downloadTextures = async (): Promise<void> => {
         waterImage,
         eagleImage,
         emptyImage,
-        emptyImageBlack,
     ] = await Promise.all(imagePromises);
     imageMap.set(CellType.BRICK, brickImage);
     imageMap.set(CellType.GRASS, grassImage);
@@ -98,7 +94,6 @@ const downloadTextures = async (): Promise<void> => {
     imageMap.set(CellType.WATER, waterImage);
     imageMap.set(CellType.EAGLE, eagleImage);
     imageMap.set(CellType.EMPTY, emptyImage);
-    imageMap.set(CellType.EMPTY_BLACK, emptyImageBlack);
 };
 
 const impactedCellsInFront = (shell: Shell) => {
@@ -119,7 +114,7 @@ const impactedCellsInFront = (shell: Shell) => {
         if (cellRow - shell.occupiedCells >= 0) {
             const cell = matrix[cellColumn][cellRow - shell.occupiedCells];
             if (cell && shell.willDestroyCell(cell)) {
-                dispatch(changeCellType(cell, CellType.EMPTY_BLACK));
+                dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
@@ -142,7 +137,7 @@ const impactedCellsInRight = (shell: Shell) => {
         if (cellColumn + shell.occupiedCells < ARENA_SIZE) {
             const cell = matrix[cellColumn + shell.occupiedCells][cellRow];
             if (cell && shell.willDestroyCell(cell)) {
-                dispatch(changeCellType(cell, CellType.EMPTY_BLACK));
+                dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
@@ -165,7 +160,7 @@ const impactedCellsInBack = (shell: Shell) => {
         if (cellRow + shell.occupiedCells < ARENA_SIZE) {
             const cell = matrix[cellColumn][cellRow + shell.occupiedCells];
             if (cell && shell.willDestroyCell(cell)) {
-                dispatch(changeCellType(cell, CellType.EMPTY_BLACK));
+                dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
@@ -181,7 +176,7 @@ const impactedCellsInLeft = (shell: Shell) => {
         if (cellColumn - shell.occupiedCells >= 0) {
             const cell = matrix[cellColumn - shell.occupiedCells][cellRow];
             if (cell && shell.willDestroyCell(cell)) {
-                dispatch(changeCellType(cell, CellType.EMPTY_BLACK));
+                dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });

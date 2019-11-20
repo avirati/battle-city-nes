@@ -23,7 +23,7 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
         throw new Error(INVALID_CONTAINER_ID);
     }
 
-    store.dispatch(fillArenaWith(CellType.EMPTY_BLACK));
+    store.dispatch(fillArenaWith(CellType.EMPTY));
 
     container.appendChild(getArenaCanvas());
     initArenaView();

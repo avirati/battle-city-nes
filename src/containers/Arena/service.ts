@@ -15,7 +15,12 @@ import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
-import { changeCellType, persistArenaToStore, setBrush } from './state/actions';
+import {
+    changeCellType,
+    loadArenaMap,
+    persistArenaToStore,
+    setBrush,
+} from './state/actions';
 import { getActiveBrushSelector, getArenaMatrixSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -310,10 +315,55 @@ const prepareLevelDesigner = () => {
     });
 };
 
+const addDragNDropListeners = () => {
+
+    const FileSelectHandler = (event: DragEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
+        const file: File = event.dataTransfer!.files[0];
+
+        if (file.type !== 'application/json') {
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = (event: ProgressEvent<FileReader>) => {
+            const serialisedGameData = event.target!.result;
+            try {
+                const parsedGameData: ICell[][] = JSON.parse(serialisedGameData as string);
+                const gameData: ICell[][] = [];
+                for (let i = 0; i < parsedGameData.length; i++) {
+                    gameData[i] = [];
+                    for (let j = 0; j < parsedGameData.length; j++) {
+                        const cell = parsedGameData[i][j];
+                        gameData[i][j] = new Cell(cell.type, cell.position.x, cell.position.y, i, j);
+                    }
+                }
+                dispatch(loadArenaMap(gameData));
+            } catch (error) {
+                console.error('Invalid Game Data', error);
+            }
+        };
+        // Read in the image file as a data URL.
+        reader.readAsText(file);
+    };
+
+    const FileDragHover = (event: DragEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
+    };
+
+    canvas.addEventListener('dragover', FileDragHover, false);
+    canvas.addEventListener('dragleave', FileDragHover, false);
+    canvas.addEventListener('drop', FileSelectHandler, false);
+};
+
 export const initLevelDesigner = () => {
     initArenaView()
     .then(() => {
         setupMenu();
         prepareLevelDesigner();
+        addDragNDropListeners();
     });
 };

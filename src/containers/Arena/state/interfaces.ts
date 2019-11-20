@@ -1,5 +1,3 @@
-import { ICell } from '../models/Cell';
+import { IArena } from '../models/Arena';
 
-export interface IState {
-    cells: ICell[][];
-}
+export interface IState extends IArena {}

@@ -14,10 +14,6 @@ import { TankDirection } from './Tank';
 export interface IArena {
     matrix: ICell[][];
     size: number;
-
-    exportArenaData: () => ICell[][];
-    importArenaData: (matrix: ICell[][]) => void;
-    registerCellDestructionFrom: (shell: Shell) => void;
 }
 
 export class Arena implements IArena {

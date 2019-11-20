@@ -1,7 +1,5 @@
-import { getScreenDimension } from 'helpers';
-
-import { Arena, IArena } from 'containers/Arena/models/Arena';
-import { CellType, ICell } from 'containers/Arena/models/Cell';
+import { IArena } from 'containers/Arena/models/Arena';
+import { CellType } from 'containers/Arena/models/Cell';
 import {
     BRICK_IMAGE,
     EMPTY_BLACK_IMAGE,
@@ -10,11 +8,11 @@ import {
     STEEL_IMAGE,
     WATER_IMAGE,
 } from 'global/constants';
+import { getScreenDimension } from 'helpers';
 
-export class CanvasBase {
+export class BaseView {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D | null;
-    private arena: IArena;
     private imageMap: Map<string, HTMLImageElement> = new Map();
 
     constructor() {
@@ -23,24 +21,16 @@ export class CanvasBase {
 
         this.setSize();
         this.clearScene();
-        this.arena = new Arena();
     }
 
     public getCanvas = () => this.canvas;
     public getContext = () => this.context;
-    public getArena = () => this.arena;
     public getImageMap = () => this.imageMap;
 
-    protected getGameData = (): ICell[][] => this.arena.exportArenaData();
-    protected setGameData = (matrix: ICell[][]): void => {
-        this.arena.importArenaData(matrix);
-        this.renderScene();
-    }
-
-    protected renderScene = () => {
-        for (let i = 0; i < this.arena.size; i++) {
-            for (let j = 0; j < this.arena.size; j++) {
-                const cell = this.arena.matrix[i][j];
+    protected renderScene = (arena: IArena) => {
+        for (let i = 0; i < arena.size; i++) {
+            for (let j = 0; j < arena.size; j++) {
+                const cell = arena.matrix[i][j];
                 this.context!.drawImage(
                     this.imageMap.get(cell.type)!,
                     cell.position.x,
@@ -91,31 +81,5 @@ export class CanvasBase {
 
     private clearScene = () => {
         this.context!.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    private downloadTextures = async (): Promise<void> => {
-        const imagePromises = [
-            this.getCellImage(CellType.BRICK),
-            this.getCellImage(CellType.GRASS),
-            this.getCellImage(CellType.STEEL),
-            this.getCellImage(CellType.WATER),
-            this.getCellImage(CellType.EAGLE),
-            this.getCellImage(CellType.EMPTY_BLACK),
-        ];
-        const [
-            brickImage,
-            grassImage,
-            steelImage,
-            waterImage,
-            eagleImage,
-            emptyImageBlack,
-        ] = await Promise.all(imagePromises);
-        this.getImageMap().set(CellType.BRICK, brickImage);
-        this.getImageMap().set(CellType.GRASS, grassImage);
-        this.getImageMap().set(CellType.STEEL, steelImage);
-        this.getImageMap().set(CellType.WATER, waterImage);
-        this.getImageMap().set(CellType.EAGLE, eagleImage);
-        this.getImageMap().set(CellType.EMPTY, emptyImageBlack);
-        this.getImageMap().set(CellType.EMPTY_BLACK, emptyImageBlack);
     }
 }

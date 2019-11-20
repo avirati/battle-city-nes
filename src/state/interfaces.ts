@@ -1,7 +1,9 @@
 import { ForkEffect } from 'redux-saga/effects';
 
+import { IArena } from 'containers/Arena/models/Arena';
+
 export interface IApplicationState {
-    dummy: any[];
+    arena: IArena;
 }
 
 export interface IReduxAction<T = any, D = any> {

@@ -11,16 +11,16 @@ export const generateEmptyArena = (): IReduxAction<ActionTypes.GENERATE_EMPTY_AR
     type: ActionTypes.GENERATE_EMPTY_ARENA,
 });
 
-export const generateEmptyArenaSuccess = (matrix: ICell[][]): IReduxAction<ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS, { cells: ICell[][] }> => ({
+export const generateEmptyArenaSuccess = (matrix: ICell[][]): IReduxAction<ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS, { matrix: ICell[][] }> => ({
     data: {
-        cells: matrix,
+        matrix,
     },
     type: ActionTypes.GENERATE_EMPTY_ARENA_SUCCESS,
 });
 
-export const loadArenaMap = (matrix: ICell[][]): IReduxAction<ActionTypes.LOAD_ARENA_MAP, { cells: ICell[][] }> => ({
+export const loadArenaMap = (matrix: ICell[][]): IReduxAction<ActionTypes.LOAD_ARENA_MAP, { matrix: ICell[][] }> => ({
     data: {
-        cells: matrix,
+        matrix,
     },
     type: ActionTypes.LOAD_ARENA_MAP,
 });

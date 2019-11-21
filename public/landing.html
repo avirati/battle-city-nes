@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Battle City</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+        .header {
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #000000;
+            box-shadow: 0 0 10px #AAAAAA;
+            font-size: 30px;
+            color: #FFFFFF;
+            font-family: arial;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: calc(100% - 60px);
+            user-select: none;
+        }
+
+        .left, .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: arial;
+            text-align: center;
+            width: 50%;
+            text-decoration: none;
+            cursor: crosshair;
+        }
+
+        .left {
+            background-color: #637BA7;
+            color: #FFFFFF;
+        }
+
+        .left:hover {
+            background-color: #415C8E;
+        }
+
+        .right {
+            background-color: #1B2C4C;
+            color: #FFFFFF;
+        }
+
+        .right:hover {
+            background-color: #0D1320;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+
+        .footer {
+            background: #000000;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 15px;
+            font-size: 20px;
+            font-family: monospace;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .footer img {
+            width: 20px;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class='header'>
+        <span>Battle City</span>
+    </div>
+    <div class="container">
+        <a class="left" href="/level-designer">
+            <div class="title">
+                LEVEL DESIGNER
+            </div>
+            <div class="summary">
+                <div>Design your own levels !</div>
+                <div>Right click to choose from elements.</div>
+                <div>Draw by dragging the mouse in the designated area.</div>
+                <div>Once you are done, right click again and click Export.</div>
+            </div>
+        </a>
+        <a class="right" href="/single-player">
+            <div class="title">
+                PLAYGROUND
+            </div>
+            <div class="summary">
+                <div>Want to test your levels ?</div>
+                <div>Simply drag the level and drop on the designated area.</div>
+                <div>You will now have an awesome Tank to play with.</div>
+                <div>Move the tank with Arrow Keys and Press Space to fire Shells !!</div>
+            </div>
+        </a>
+    </div>
+    <div class="footer">
+        Made with ♥ in Zagreb &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://github.com/avirati/battle-city-nes/" target="_blank">
+            <img src="images/github.png" />
+        </a>
+    </div>
+</body>
+</html>

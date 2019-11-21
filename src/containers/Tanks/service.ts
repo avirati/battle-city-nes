@@ -401,7 +401,7 @@ const addCellInspector = () => {
     canvas.addEventListener('mouseleave', () => {
         dialog!.style.display = 'none';
     });
-}
+};
 
 export const getTankViewCanvas = () => canvas;
 

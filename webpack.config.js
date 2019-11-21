@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const getDistDirectory = (env) => env.MODULE === 'SINGLE_PLAYER' ? 'dist/single-player' : 'dist/level-designer';
 
@@ -38,6 +39,16 @@ module.exports = (env) => ({
             __MODULE__: "'" + env.MODULE + "'",
             __DEV__: env.ENVIRONMENT === 'DEV',
         }),
+        new CopyPlugin([
+            {
+                from: path.resolve(__dirname, 'public/landing.html'),
+                to: path.resolve(__dirname, 'dist/landing.html'),
+            },
+            {
+                from: path.resolve(__dirname, 'public/images'),
+                to: path.resolve(__dirname, 'dist/images'),
+            },
+        ]),
     ],
     resolve: {
         extensions: [ '.tsx', '.ts', '.js' ],

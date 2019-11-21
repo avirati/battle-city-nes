@@ -174,9 +174,16 @@ const impactedCellsInBack = (shell: Shell) => {
 
 const impactedCellsInLeft = (shell: Shell) => {
     const topLeft = shell.position;
+    const topLeftAbove = topLeft.changeY(-shell.size);
     const bottomLeft = topLeft.changeY(shell.size);
+    const bottomLeftBelow = bottomLeft.changeY(shell.size);
     const matrix = applySelector(getArenaMatrixSelector);
-    [topLeft, bottomLeft].map((extremety) => {
+    [
+        topLeft,
+        topLeftAbove,
+        bottomLeft,
+        bottomLeftBelow,
+    ].map((extremety) => {
         const cellColumn = Math.floor(extremety.x / CELL_SIZE);
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
         if (cellColumn - shell.occupiedCells >= 0) {

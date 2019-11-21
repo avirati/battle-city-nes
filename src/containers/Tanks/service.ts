@@ -27,6 +27,7 @@ import { getArenaMatrixSelector } from '../Arena/state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+const dialog: HTMLElement | null = document.getElementById('dialog');
 const tankSprites: Map<string, HTMLImageElement> = new Map();
 const shellSprites: Map<string, HTMLImageElement> = new Map();
 
@@ -375,12 +376,43 @@ const addDragNDropListeners = () => {
     canvas.addEventListener('drop', FileSelectHandler, false);
 };
 
+const addCellInspector = () => {
+    canvas.addEventListener('mousemove', (event: MouseEvent) => {
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        const cellColumn = Math.floor(x / CELL_SIZE);
+        const cellRow = Math.floor(y / CELL_SIZE);
+
+        const matrix = applySelector(getArenaMatrixSelector);
+
+        const cell = matrix[cellColumn][cellRow];
+        if (cell) {
+            dialog!.innerText = cell.toString();
+            dialog!.style.top = (event.clientY - 10) + 'px';
+            dialog!.style.left = (event.clientX + 10) + 'px';
+        }
+    });
+
+    canvas.addEventListener('mouseenter', () => {
+        dialog!.style.display = 'block';
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        dialog!.style.display = 'none';
+    });
+}
+
 export const getTankViewCanvas = () => canvas;
 
 export const initTankView = () => {
     setSize();
     clearScene();
     addDragNDropListeners();
+
+    if (__DEV__) {
+        addCellInspector();
+    }
 
     downloadTextures()
     .then(() => {

@@ -24,10 +24,21 @@
         .menu img {
             width: 48px;
         }
+
+        .dialog {
+            position: absolute;
+            z-index: 101;
+            display: none;
+            border: 1px solid #CCCCCC;
+            background: #FFFFFF;
+            font-family: monospace;
+            width: 80px;
+        }
     </style>
 </head>
 <body>
     <div id="app"></div>
     <div id="menu" class="menu"></div>
+    <div id="dialog" class="dialog"></div>
 </body>
 </html>

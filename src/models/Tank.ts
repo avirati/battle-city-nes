@@ -83,12 +83,12 @@ export class Tank implements ITank {
                     .changeX(TANK_SIZE)
                     .changeY((TANK_SIZE - SHELL_SIZE) / 2);
             case TankDirection.BACKWARD:
-                    return this.position
-                        .changeX((TANK_SIZE - SHELL_SIZE) / 2)
-                        .changeY(TANK_SIZE);
+                return this.position
+                    .changeX((TANK_SIZE - SHELL_SIZE) / 2)
+                    .changeY(TANK_SIZE);
             case TankDirection.LEFT:
-                    return this.position
-                        .changeY((TANK_SIZE - SHELL_SIZE) / 2);
+                return this.position
+                    .changeY((TANK_SIZE - SHELL_SIZE) / 2);
             default:
                 return this.position;
         }

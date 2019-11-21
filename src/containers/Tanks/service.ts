@@ -212,7 +212,7 @@ const renderShellsForOneFrame = () => {
                 context!.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
                 shell.move();
                 context!.drawImage(
-                    shellSprites.get(tank.direction)!,
+                    shellSprites.get(shell.direction)!,
                     shell.position.x,
                     shell.position.y,
                     SHELL_SIZE,

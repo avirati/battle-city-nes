@@ -26,7 +26,7 @@ module.exports = {
             new CopyPlugin([
                 {
                     from: path.resolve(__dirname, 'public/landing.html'),
-                    to: path.resolve(__dirname, 'dist/landing.html'),
+                    to: path.resolve(__dirname, 'dist/index.html'),
                 },
                 {
                     from: path.resolve(__dirname, 'public/images'),

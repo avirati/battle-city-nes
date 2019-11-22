@@ -292,8 +292,11 @@ const setupMenu = () => {
 };
 
 const prepareLevelDesigner = () => {
-    const matrix = applySelector(getArenaMatrixSelector);
-    canvas.addEventListener('mousedown', () => mouseMoving = true);
+    let matrix: ICell[][];
+    canvas.addEventListener('mousedown', () => {
+        mouseMoving = true;
+        matrix = applySelector(getArenaMatrixSelector);
+    });
     canvas.addEventListener('mouseup', () => {
         mouseMoving = false;
 

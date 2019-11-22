@@ -125,12 +125,25 @@ const downloadTextures = async (): Promise<void> => {
     shellSprites.set(TankDirection.LEFT, shellImageLeft);
 };
 
+// Inspired from https://codepen.io/kevrowe/pen/qEgGVO
 const addKeyBindings = () => {
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-        const key = event.keyCode || event.which;
+    let direction: TankDirection;
+    let movementTimeout: number = -1;
 
-        switch (key) {
-            case 38: // UP Arrow
+    const startMoving = () => {
+        if (movementTimeout === -1) {
+            move(direction);
+        }
+    };
+
+    const stopMoving = () => {
+        clearTimeout(movementTimeout);
+        movementTimeout = -1;
+    };
+
+    const move = (direction: TankDirection) => {
+        switch (direction) {
+            case TankDirection.FORWARD:
                 if (tank.direction === TankDirection.FORWARD) {
                     if (canMove()) {
                         tank.move(TankDirection.FORWARD);
@@ -139,7 +152,7 @@ const addKeyBindings = () => {
                     tank.changeDirection(TankDirection.FORWARD);
                 }
                 break;
-            case 40: // DOWN Arrow
+            case TankDirection.BACKWARD: // DOWN Arrow
                 if (tank.direction === TankDirection.BACKWARD) {
                     if (canMove()) {
                         tank.move(TankDirection.BACKWARD);
@@ -148,7 +161,7 @@ const addKeyBindings = () => {
                     tank.changeDirection(TankDirection.BACKWARD);
                 }
                 break;
-            case 39: // RIGHT Arrow
+            case TankDirection.RIGHT: // RIGHT Arrow
                 if (tank.direction === TankDirection.RIGHT) {
                     if (canMove()) {
                         tank.move(TankDirection.RIGHT);
@@ -157,7 +170,7 @@ const addKeyBindings = () => {
                     tank.changeDirection(TankDirection.RIGHT);
                 }
                 break;
-            case 37:
+            case TankDirection.LEFT:
                 if (tank.direction === TankDirection.LEFT) {
                     if (canMove()) {
                         tank.move(TankDirection.LEFT);
@@ -166,11 +179,44 @@ const addKeyBindings = () => {
                     tank.changeDirection(TankDirection.LEFT);
                 }
                 break;
+        }
+
+        movementTimeout = setTimeout(move, 30, direction);
+    };
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+        const key = event.keyCode || event.which;
+
+        switch (key) {
+            case 38: // UP Arrow
+                direction = TankDirection.FORWARD;
+                startMoving();
+                break;
+            case 40: // DOWN Arrow
+                direction = TankDirection.BACKWARD;
+                startMoving();
+                break;
+            case 39: // RIGHT Arrow
+                direction = TankDirection.RIGHT;
+                startMoving();
+                break;
+            case 37:
+                direction = TankDirection.LEFT;
+                startMoving();
+                break;
 
             case 32:
                 const shell = tank.fire();
                 projectiles.set(shell.getId(), shell);
                 break;
+        }
+    });
+
+    document.addEventListener('keyup', (event: KeyboardEvent) => {
+        const key = event.keyCode || event.which;
+
+        if ([37, 38, 39, 40].includes(key)) {
+            stopMoving();
         }
     });
 };

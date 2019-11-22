@@ -77,17 +77,20 @@ export class Tank implements ITank {
     private getShellPosition = (): Coordinate => {
         switch (this.direction) {
             case TankDirection.FORWARD:
-                return this.position.changeX((TANK_SIZE - SHELL_SIZE) / 2);
+                return this.position
+                        .changeX((TANK_SIZE - SHELL_SIZE) / 2)
+                        .changeY(SHELL_SIZE);
             case TankDirection.RIGHT:
                 return this.position
-                    .changeX(TANK_SIZE)
+                    .changeX(TANK_SIZE - SHELL_SIZE)
                     .changeY((TANK_SIZE - SHELL_SIZE) / 2);
             case TankDirection.BACKWARD:
                 return this.position
                     .changeX((TANK_SIZE - SHELL_SIZE) / 2)
-                    .changeY(TANK_SIZE);
+                    .changeY(TANK_SIZE - SHELL_SIZE);
             case TankDirection.LEFT:
                 return this.position
+                    .changeX(SHELL_SIZE)
                     .changeY((TANK_SIZE - SHELL_SIZE) / 2);
             default:
                 return this.position;

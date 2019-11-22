@@ -7,6 +7,7 @@ import {
     SHELL_IMAGE_LEFT,
     SHELL_IMAGE_RIGHT,
     SHELL_SIZE,
+    TANK_FPS,
     TANK_IMAGE_BACKWARD,
     TANK_IMAGE_FORWARD,
     TANK_IMAGE_LEFT,
@@ -181,7 +182,7 @@ const addKeyBindings = () => {
                 break;
         }
 
-        movementTimeout = setTimeout(move, 30, direction);
+        movementTimeout = setTimeout(move, TANK_FPS, direction);
     };
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {

@@ -22,7 +22,7 @@ function * gamepadButtonPressSaga(action: ReturnType<typeof gamepadButtonPress>)
     const { gamepad } = action.data!;
 
     document.dispatchEvent(new GamepadEvent(
-        'gamepadkeypressed',
+        'gamepadkeydown',
         {
             bubbles: false,
             cancelable: false,
@@ -51,17 +51,17 @@ function * listenToKeyBindingSaga(action: ReturnType<typeof listenToKeyBinding>)
     };
     document.addEventListener('keydown', onKeyDown);
 
-    const onGamepadKeyPress = (event: Event) => {
+    const onGamepadKeyDown = (event: Event) => {
         const { gamepad } = event as GamepadEvent;
         const pressedButtonIndex = gamepad.buttons.findIndex((button) => button.pressed);
 
         dispatch(saveKeyBinding(gamepadKey, pressedButtonIndex));
 
         gamepadControllerContainer!.classList.remove('disable');
-        document.removeEventListener('gamepadkeypressed', onGamepadKeyPress);
+        document.removeEventListener('gamepadkeydown', onGamepadKeyDown);
     };
 
-    document.addEventListener('gamepadkeypressed', onGamepadKeyPress);
+    document.addEventListener('gamepadkeydown', onGamepadKeyDown);
 }
 
 function * watchForSaveKeyBinding() {
@@ -79,7 +79,7 @@ function * saveKeyBindingSaga() {
     ];
     const isEveryKeyMapped =
         allControls
-        .filter((control) => gamepadKeyBindings[control])
+        .filter((control) => gamepadKeyBindings[control] !== undefined)
         .length === allControls.length;
 
     if (isEveryKeyMapped) {

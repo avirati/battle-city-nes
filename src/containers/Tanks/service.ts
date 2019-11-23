@@ -414,9 +414,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
         movementTimeout = setTimeout(move, TANK_FPS, direction);
     };
 
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-        const key = event.keyCode || event.which;
-
+    const onKeyDown = (key: number) => {
         switch (key) {
             case gamepadKeyBindings[GamepadControls.GAMEPAD_UP]: // UP Arrow
                 direction = TankDirection.FORWARD;
@@ -440,7 +438,19 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
                 projectiles.set(shell.getId(), shell);
                 break;
         }
+    }
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+        const key = event.keyCode || event.which;
+
+        onKeyDown(key);
     });
+
+    document.addEventListener('gamepadkeydown', (event: Event) => {
+        const { gamepad } = event as GamepadEvent;
+        const pressedButtonIndex = gamepad.buttons.findIndex((button) => button.pressed);
+        onKeyDown(pressedButtonIndex);
+    })
 
     document.addEventListener('keyup', (event: KeyboardEvent) => {
         const key = event.keyCode || event.which;

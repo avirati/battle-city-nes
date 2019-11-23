@@ -1,4 +1,4 @@
-import { GamepadControls, IGamepadState } from 'containers/Gamepad/state/interfaces';
+import { GamepadControls, IGamepadState, IGamepadDOMEvents } from 'containers/Gamepad/state/interfaces';
 import {
     ARENA_SIZE,
     CELL_SIZE,
@@ -438,6 +438,17 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
                 projectiles.set(shell.getId(), shell);
                 break;
         }
+    };
+
+    const onKeyUp = (key: number) => {
+        if ([
+            gamepadKeyBindings[GamepadControls.GAMEPAD_LEFT],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_UP],
+        ].includes(key)) {
+            stopMoving();
+        }
     }
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
@@ -447,22 +458,19 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     });
 
     document.addEventListener('gamepadkeydown', (event: Event) => {
-        const { gamepad } = event as GamepadEvent;
-        const pressedButtonIndex = gamepad.buttons.findIndex((button) => button.pressed);
-        onKeyDown(pressedButtonIndex);
-    })
+        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+        onKeyDown(pressedButtonIndex);  // TODO: Multiple button press will not work here
+    });
 
     document.addEventListener('keyup', (event: KeyboardEvent) => {
         const key = event.keyCode || event.which;
 
-        if ([
-            gamepadKeyBindings[GamepadControls.GAMEPAD_LEFT],
-            gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN],
-            gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT],
-            gamepadKeyBindings[GamepadControls.GAMEPAD_UP],
-        ].includes(key)) {
-            stopMoving();
-        }
+        onKeyUp(key);
+    });
+
+    document.addEventListener('gamepadkeyup', (event: Event) => {
+        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+        onKeyUp(pressedButtonIndex);  // TODO: Multiple button press will not work here
     });
 };
 

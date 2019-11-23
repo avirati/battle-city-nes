@@ -17,3 +17,7 @@ export enum GamepadControls {
 
     GAMEPAD_SHOOT = 'GAMEPAD_SHOOT',
 }
+
+export interface IGamepadDOMEvents {
+    pressedButtonIndex: number;
+}

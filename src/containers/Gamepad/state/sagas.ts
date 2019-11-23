@@ -1,36 +1,17 @@
 import { addKeyBindings } from 'containers/Tanks/service';
-import { select, takeEvery, takeLatest } from 'redux-saga/effects';
+import { select, takeLatest } from 'redux-saga/effects';
 import { dispatch } from 'state/store';
 
 import {
-    gamepadButtonPress,
     listenToKeyBinding,
     saveKeyBinding,
     ActionTypes,
 } from './actions';
-import { GamepadControls, IGamepadState } from './interfaces';
+import { GamepadControls, IGamepadState, IGamepadDOMEvents } from './interfaces';
 import { gamepadKeyBindingsSelector } from './selectors';
 
 const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');
 const gamepadControllerContainer: HTMLElement | null = gamepadContainer!.querySelector('.controller');
-
-function * watchForGamepadButtonPress() {
-    yield takeEvery(ActionTypes.GAMEPAD_BUTTON_PRESS, gamepadButtonPressSaga);
-}
-
-function * gamepadButtonPressSaga(action: ReturnType<typeof gamepadButtonPress>) {
-    const { gamepad } = action.data!;
-
-    document.dispatchEvent(new GamepadEvent(
-        'gamepadkeydown',
-        {
-            bubbles: false,
-            cancelable: false,
-            composed: true,
-            gamepad,
-        },
-    ));
-}
 
 function * watchForListenToKeyBinding() {
     yield takeLatest(ActionTypes.LISTEN_TO_KEY_BINDING, listenToKeyBindingSaga);
@@ -52,8 +33,7 @@ function * listenToKeyBindingSaga(action: ReturnType<typeof listenToKeyBinding>)
     document.addEventListener('keydown', onKeyDown);
 
     const onGamepadKeyDown = (event: Event) => {
-        const { gamepad } = event as GamepadEvent;
-        const pressedButtonIndex = gamepad.buttons.findIndex((button) => button.pressed);
+        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
 
         dispatch(saveKeyBinding(gamepadKey, pressedButtonIndex));
 
@@ -88,7 +68,6 @@ function * saveKeyBindingSaga() {
 }
 
 export const sagas = [
-    watchForGamepadButtonPress,
     watchForListenToKeyBinding,
     watchForSaveKeyBinding,
 ];

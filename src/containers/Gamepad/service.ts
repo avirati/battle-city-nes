@@ -1,17 +1,22 @@
 import { truthy } from 'helpers';
 import { dispatch } from 'state/store';
 
-import { gamepadButtonPress, gamepadConnected, gamepadDisconnected, listenToKeyBinding } from './state/actions';
-import { GamepadControls } from './state/interfaces';
+import { gamepadConnected, gamepadDisconnected, listenToKeyBinding } from './state/actions';
+import { GamepadControls, IGamepadDOMEvents } from './state/interfaces';
 
 const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');
 const gamepadControllerContainer: HTMLElement | null = gamepadContainer!.querySelector('.controller');
 
 const getGamepads = () => Array.from(navigator.getGamepads()).filter(truthy);
 
+const gamepadButtons: Map<string, Map<number, boolean>> = new Map();
+
 const listenForGamepadConnect = () => {
     window.addEventListener('gamepadconnected', () => {
         const gamepad = getGamepads()[0];
+        const buttonMap: Map<number, boolean> = new Map();
+        gamepad!.buttons.forEach((button, index) => buttonMap.set(index, button.pressed));
+        gamepadButtons.set(gamepad!.id, buttonMap);
         dispatch(gamepadConnected(gamepad!));
     });
 };
@@ -19,25 +24,53 @@ const listenForGamepadConnect = () => {
 const listenForGamepadDisconnect = () => {
     window.addEventListener('gamepaddisconnected', () => {
         const gamepad = getGamepads()[0];
+        gamepadButtons.delete(gamepad!.id);
         dispatch(gamepadDisconnected(gamepad!));
     });
 };
 
-const onGamepadButtonPressed = () => {
+const checkIfGamepadButtonPressed = () => {
     const gamepads = getGamepads();
     if (gamepads.length === 0) {
         return;
     }
     gamepads.forEach((gamepad) => {
-        const buttonsPressed = gamepad!.buttons.filter((button) => button.pressed);
-        if (buttonsPressed.length > 0) {
-            dispatch(gamepadButtonPress(gamepad!));
+        if (!gamepad) {
+            return;
+        }
+        const buttonsPressedIndices: number[] = [];
+        gamepad.buttons.forEach((button, index) => {
+            if (button.pressed) {
+                buttonsPressedIndices.push(index);
+            }
+        });
+        if (buttonsPressedIndices.length > 0) {
+            buttonsPressedIndices.forEach((pressedButtonIndex) => {
+                const buttonMap = gamepadButtons.get(gamepad.id)!;
+                const wasButtonPressed = buttonMap.get(pressedButtonIndex);
+                if (!wasButtonPressed) {
+                    buttonMap.set(pressedButtonIndex, true);
+                    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>(
+                        'gamepadkeydown', { detail: { pressedButtonIndex } },
+                    ));
+                }
+            });
+        } else {
+            const buttonMap = gamepadButtons.get(gamepad.id)!;
+            buttonMap.forEach((wasPressed, pressedButtonIndex) => {
+                if (wasPressed) {
+                    buttonMap.set(pressedButtonIndex, false);
+                    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>(
+                        'gamepadkeyup', { detail: { pressedButtonIndex } },
+                    ));
+                }
+            });
         }
     });
 };
 
 const listenForGamepadButtons = () => {
-    setInterval(onGamepadButtonPressed, 100);
+    setInterval(checkIfGamepadButtonPressed, 100);
 };
 
 const addConfigurationHandlers = () => {

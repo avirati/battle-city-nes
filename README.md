@@ -9,6 +9,7 @@ Typescript implementation of the classic video game - Battle City (NES)
 1. Level Design
 2. Level Export and Import
 3. Single Player Level Exploration with ability to fire Tank Shells
+4. Configurable Controls (Gamepad and Keyboard supported)
 
 ### Features yet to build
 

@@ -1,26 +1,18 @@
-import 'gamecontroller.js/src/index';
+import 'gamecontroller.js/dist/gamecontroller.min';
 
-import { truthy } from 'helpers';
 import { dispatch } from 'state/store';
 
-import { gamepadConnected, gamepadDisconnected, listenToKeyBinding } from './state/actions';
+import { listenToKeyBinding } from './state/actions';
+import { buttonNames } from './state/constants';
 import { GamepadControls, IGamepadDOMEvents } from './state/interfaces';
 
 const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');
 const gamepadControllerContainer: HTMLElement | null = gamepadContainer!.querySelector('.controller');
 const gamepadFooter: HTMLElement | null = gamepadContainer!.querySelector('.footer');
 
-const getGamepads = () => Array.from(navigator.getGamepads()).filter(truthy);
-
-const gamepadButtons: Map<string, Map<number, boolean>> = new Map();
-
 const listenForGamepadConnect = () => {
-    window.addEventListener('gamepadconnected', () => {
-        const gamepad = getGamepads()[0];
-        const buttonMap: Map<number, boolean> = new Map();
-        gamepad!.buttons.forEach((button, index) => buttonMap.set(index, button.pressed));
-        gamepadButtons.set(gamepad!.id, buttonMap);
-        dispatch(gamepadConnected(gamepad!));
+    gameControl.on('connect', (gamepad: IGamepadObject) => {
+        addButtonListeners(gamepad);
 
         gamepadControllerContainer!.classList.remove('disable');
         gamepadFooter!.innerText = 'Gamepad Connected !';
@@ -28,57 +20,25 @@ const listenForGamepadConnect = () => {
 };
 
 const listenForGamepadDisconnect = () => {
-    window.addEventListener('gamepaddisconnected', (event: Event) => {
-        const { gamepad } = (event as GamepadEvent);
-        gamepadButtons.delete(gamepad!.id);
-        dispatch(gamepadDisconnected(gamepad!));
+    gameControl.on('disconnect', () => {
         gamepadControllerContainer!.classList.add('disable');
         gamepadFooter!.innerText = 'Gamepad Disconnected !';
     });
 };
 
-const checkIfGamepadButtonPressed = () => {
-    const gamepads = getGamepads();
-    if (gamepads.length === 0) {
-        return;
-    }
-    gamepads.forEach((gamepad) => {
-        if (!gamepad) {
-            return;
-        }
-        const buttonsPressedIndices: number[] = [];
-        gamepad.buttons.forEach((button, index) => {
-            if (button.pressed) {
-                buttonsPressedIndices.push(index);
-            }
-        });
-        if (buttonsPressedIndices.length > 0) {
-            buttonsPressedIndices.forEach((pressedButtonIndex) => {
-                const buttonMap = gamepadButtons.get(gamepad.id)!;
-                const wasButtonPressed = buttonMap.get(pressedButtonIndex);
-                if (!wasButtonPressed) {
-                    buttonMap.set(pressedButtonIndex, true);
-                    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>(
-                        'gamepadkeydown', { detail: { pressedButtonIndex } },
-                    ));
-                }
-            });
-        } else {
-            const buttonMap = gamepadButtons.get(gamepad.id)!;
-            buttonMap.forEach((wasPressed, pressedButtonIndex) => {
-                if (wasPressed) {
-                    buttonMap.set(pressedButtonIndex, false);
-                    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>(
-                        'gamepadkeyup', { detail: { pressedButtonIndex } },
-                    ));
-                }
-            });
-        }
-    });
+const onButtonDown = (buttonName: GameControlButtonTypes) => {
+    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>('gamepadkeydown', { detail: { buttonName } }));
 };
 
-const listenForGamepadButtons = () => {
-    setInterval(checkIfGamepadButtonPressed, 100);
+const onButtonUp = (buttonName: GameControlButtonTypes) => {
+    document.dispatchEvent(new CustomEvent<IGamepadDOMEvents>('gamepadkeyup', { detail: { buttonName } }));
+};
+
+const addButtonListeners = (gamepad: IGamepadObject) => {
+    buttonNames.forEach((buttonName) => {
+        gamepad.before(buttonName, () => onButtonDown(buttonName));
+        gamepad.after(buttonName, () => onButtonUp(buttonName));
+    });
 };
 
 const addConfigurationHandlers = () => {
@@ -94,7 +54,6 @@ export const addSupportForGamepadIfAvailable = () => {
     if (isGamepadSupported) {
         listenForGamepadConnect();
         listenForGamepadDisconnect();
-        listenForGamepadButtons();
         addConfigurationHandlers();
     }
 };

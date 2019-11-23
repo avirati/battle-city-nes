@@ -1,6 +1,5 @@
 export interface IGamepadState {
-    gamepads: { [key: string]: Gamepad | undefined };
-    keyBindings: { [gamepadKey: string]: number};
+    keyBindings: { [gamepadKey: string]: GameControlButtonTypes | number};
 }
 
 export enum GamepadButtonAssignmentState {
@@ -19,5 +18,5 @@ export enum GamepadControls {
 }
 
 export interface IGamepadDOMEvents {
-    pressedButtonIndex: number;
+    buttonName: GameControlButtonTypes;
 }

@@ -414,8 +414,8 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
         movementTimeout = setTimeout(move, TANK_FPS, direction);
     };
 
-    const onKeyDown = (key: number) => {
-        switch (key) {
+    const onKeyDown = (buttonName: GameControlButtonTypes | number) => {
+        switch (buttonName) {
             case gamepadKeyBindings[GamepadControls.GAMEPAD_UP]: // UP Arrow
                 direction = TankDirection.FORWARD;
                 startMoving();
@@ -440,13 +440,13 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
         }
     };
 
-    const onKeyUp = (key: number) => {
+    const onKeyUp = (key: GameControlButtonTypes | number) => {
         if ([
             gamepadKeyBindings[GamepadControls.GAMEPAD_LEFT],
             gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN],
             gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT],
             gamepadKeyBindings[GamepadControls.GAMEPAD_UP],
-        ].includes(key)) {
+        ].includes(key as any)) {
             stopMoving();
         }
     };
@@ -458,8 +458,8 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     });
 
     document.addEventListener('gamepadkeydown', (event: Event) => {
-        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
-        onKeyDown(pressedButtonIndex);  // TODO: Multiple button press will not work here
+        const { buttonName } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+        onKeyDown(buttonName);  // TODO: Multiple button press will not work here
     });
 
     document.addEventListener('keyup', (event: KeyboardEvent) => {
@@ -469,8 +469,8 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     });
 
     document.addEventListener('gamepadkeyup', (event: Event) => {
-        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
-        onKeyUp(pressedButtonIndex);  // TODO: Multiple button press will not work here
+        const { buttonName } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+        onKeyUp(buttonName);  // TODO: Multiple button press will not work here
     });
 };
 

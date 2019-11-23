@@ -33,9 +33,9 @@ function * listenToKeyBindingSaga(action: ReturnType<typeof listenToKeyBinding>)
     document.addEventListener('keydown', onKeyDown);
 
     const onGamepadKeyDown = (event: Event) => {
-        const { pressedButtonIndex } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+        const { buttonName } = (event as CustomEvent<IGamepadDOMEvents>).detail;
 
-        dispatch(saveKeyBinding(gamepadKey, pressedButtonIndex));
+        dispatch(saveKeyBinding(gamepadKey, buttonName));
 
         gamepadControllerContainer!.classList.remove('disable');
         document.removeEventListener('gamepadkeydown', onGamepadKeyDown);

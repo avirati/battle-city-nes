@@ -1,12 +1,12 @@
 import { Actions, ActionTypes } from './actions';
-import { IState } from './interfaces';
+import { IGamepadState } from './interfaces';
 
-const initialState: IState = {
+const initialState: IGamepadState = {
     gamepads: {},
     keyBindings: {},
-}
+};
 
-export const reducer = (state: IState = initialState, action: Actions): IState => {
+export const reducer = (state: IGamepadState = initialState, action: Actions): IGamepadState => {
     switch (action.type) {
         case ActionTypes.GAMEPAD_CONNECTED:
             return {
@@ -35,4 +35,4 @@ export const reducer = (state: IState = initialState, action: Actions): IState =
         default:
             return state;
     }
-}
+};

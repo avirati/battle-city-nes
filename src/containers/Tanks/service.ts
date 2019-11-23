@@ -1,3 +1,4 @@
+import { GamepadControls, IGamepadState } from 'containers/Gamepad/state/interfaces';
 import {
     ARENA_SIZE,
     CELL_SIZE,
@@ -124,102 +125,6 @@ const downloadTextures = async (): Promise<void> => {
     shellSprites.set(TankDirection.BACKWARD, shellImageBackward);
     shellSprites.set(TankDirection.RIGHT, shellImageRight);
     shellSprites.set(TankDirection.LEFT, shellImageLeft);
-};
-
-// Inspired from https://codepen.io/kevrowe/pen/qEgGVO
-const addKeyBindings = () => {
-    let direction: TankDirection;
-    let movementTimeout: number = -1;
-
-    const startMoving = () => {
-        if (movementTimeout === -1) {
-            move(direction);
-        }
-    };
-
-    const stopMoving = () => {
-        clearTimeout(movementTimeout);
-        movementTimeout = -1;
-    };
-
-    const move = (direction: TankDirection) => {
-        switch (direction) {
-            case TankDirection.FORWARD:
-                if (tank.direction === TankDirection.FORWARD) {
-                    if (canMove()) {
-                        tank.move(TankDirection.FORWARD);
-                    }
-                } else {
-                    tank.changeDirection(TankDirection.FORWARD);
-                }
-                break;
-            case TankDirection.BACKWARD: // DOWN Arrow
-                if (tank.direction === TankDirection.BACKWARD) {
-                    if (canMove()) {
-                        tank.move(TankDirection.BACKWARD);
-                    }
-                } else {
-                    tank.changeDirection(TankDirection.BACKWARD);
-                }
-                break;
-            case TankDirection.RIGHT: // RIGHT Arrow
-                if (tank.direction === TankDirection.RIGHT) {
-                    if (canMove()) {
-                        tank.move(TankDirection.RIGHT);
-                    }
-                } else {
-                    tank.changeDirection(TankDirection.RIGHT);
-                }
-                break;
-            case TankDirection.LEFT:
-                if (tank.direction === TankDirection.LEFT) {
-                    if (canMove()) {
-                        tank.move(TankDirection.LEFT);
-                    }
-                } else {
-                    tank.changeDirection(TankDirection.LEFT);
-                }
-                break;
-        }
-
-        movementTimeout = setTimeout(move, TANK_FPS, direction);
-    };
-
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-        const key = event.keyCode || event.which;
-
-        switch (key) {
-            case 38: // UP Arrow
-                direction = TankDirection.FORWARD;
-                startMoving();
-                break;
-            case 40: // DOWN Arrow
-                direction = TankDirection.BACKWARD;
-                startMoving();
-                break;
-            case 39: // RIGHT Arrow
-                direction = TankDirection.RIGHT;
-                startMoving();
-                break;
-            case 37:
-                direction = TankDirection.LEFT;
-                startMoving();
-                break;
-
-            case 32:
-                const shell = tank.fire();
-                projectiles.set(shell.getId(), shell);
-                break;
-        }
-    });
-
-    document.addEventListener('keyup', (event: KeyboardEvent) => {
-        const key = event.keyCode || event.which;
-
-        if ([37, 38, 39, 40].includes(key)) {
-            stopMoving();
-        }
-    });
 };
 
 const render = () => {
@@ -450,6 +355,107 @@ const addCellInspector = () => {
     });
 };
 
+// Inspired from https://codepen.io/kevrowe/pen/qEgGVO
+export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings']) => {
+    let direction: TankDirection;
+    let movementTimeout: number = -1;
+
+    const startMoving = () => {
+        if (movementTimeout === -1) {
+            move(direction);
+        }
+    };
+
+    const stopMoving = () => {
+        clearTimeout(movementTimeout);
+        movementTimeout = -1;
+    };
+
+    const move = (direction: TankDirection) => {
+        switch (direction) {
+            case TankDirection.FORWARD:
+                if (tank.direction === TankDirection.FORWARD) {
+                    if (canMove()) {
+                        tank.move(TankDirection.FORWARD);
+                    }
+                } else {
+                    tank.changeDirection(TankDirection.FORWARD);
+                }
+                break;
+            case TankDirection.BACKWARD: // DOWN Arrow
+                if (tank.direction === TankDirection.BACKWARD) {
+                    if (canMove()) {
+                        tank.move(TankDirection.BACKWARD);
+                    }
+                } else {
+                    tank.changeDirection(TankDirection.BACKWARD);
+                }
+                break;
+            case TankDirection.RIGHT: // RIGHT Arrow
+                if (tank.direction === TankDirection.RIGHT) {
+                    if (canMove()) {
+                        tank.move(TankDirection.RIGHT);
+                    }
+                } else {
+                    tank.changeDirection(TankDirection.RIGHT);
+                }
+                break;
+            case TankDirection.LEFT:
+                if (tank.direction === TankDirection.LEFT) {
+                    if (canMove()) {
+                        tank.move(TankDirection.LEFT);
+                    }
+                } else {
+                    tank.changeDirection(TankDirection.LEFT);
+                }
+                break;
+        }
+
+        movementTimeout = setTimeout(move, TANK_FPS, direction);
+    };
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+        const key = event.keyCode || event.which;
+
+        switch (key) {
+            case gamepadKeyBindings[GamepadControls.GAMEPAD_UP]: // UP Arrow
+                direction = TankDirection.FORWARD;
+                startMoving();
+                break;
+            case gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN]: // DOWN Arrow
+                direction = TankDirection.BACKWARD;
+                startMoving();
+                break;
+            case gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT]: // RIGHT Arrow
+                direction = TankDirection.RIGHT;
+                startMoving();
+                break;
+            case gamepadKeyBindings[GamepadControls.GAMEPAD_LEFT]:
+                direction = TankDirection.LEFT;
+                startMoving();
+                break;
+
+            case gamepadKeyBindings[GamepadControls.GAMEPAD_SHOOT]:
+                const shell = tank.fire();
+                projectiles.set(shell.getId(), shell);
+                break;
+        }
+    });
+
+    document.addEventListener('keyup', (event: KeyboardEvent) => {
+        const key = event.keyCode || event.which;
+
+        if ([
+            gamepadKeyBindings[GamepadControls.GAMEPAD_LEFT],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT],
+            gamepadKeyBindings[GamepadControls.GAMEPAD_UP],
+        ].includes(key)) {
+            stopMoving();
+        }
+    });
+};
+
 export const getTankViewCanvas = () => canvas;
 
 export const initTankView = () => {
@@ -463,7 +469,6 @@ export const initTankView = () => {
 
     downloadTextures()
     .then(() => {
-        addKeyBindings();
         render();
     });
 };

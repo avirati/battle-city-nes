@@ -1,4 +1,4 @@
-export interface IState {
+export interface IGamepadState {
     gamepads: { [key: string]: Gamepad | undefined };
     keyBindings: { [gamepadKey: string]: number};
 }

@@ -446,7 +446,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
             gamepadKeyBindings[GamepadControls.GAMEPAD_DOWN],
             gamepadKeyBindings[GamepadControls.GAMEPAD_RIGHT],
             gamepadKeyBindings[GamepadControls.GAMEPAD_UP],
-        ].includes(key as any)) {
+        ].includes(key)) {
             stopMoving();
         }
     };

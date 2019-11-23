@@ -54,7 +54,7 @@
             line-height: 3.5;
         }
 
-        .gamepad .player {
+        .gamepad .controller {
             width: 300px;
             border: 1px solid #aaa;
             border-radius: 30px;
@@ -86,15 +86,20 @@
             color: #FFF;
         }
 
-        .gamepad .player .keys {
+        .gamepad .controller .keys {
             width: 50px;
             height: 50px;
         }
 
-        .gamepad .player .keys.control {
+        .gamepad .controller .keys.control {
             background-color: #CCCCCC;
             line-height: 4;
             font-size: 12px;
+        }
+
+        .disable {
+            opacity: 0.5;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -102,20 +107,20 @@
     <div id="app" class="app"></div>
     <div id="gamepad" class="gamepad">
         <div class="title">Configure Controls (Gamepads Supported)</div>
-        <div class="player">
+        <div class="controller">
             <div class="movement">
                 <div class="keys dummy"></div>
-                <div class="keys control">UP</div>
+                <div class="keys control" data-action="UP" data-state="UNASSIGNED">UP</div>
                 <div class="keys dummy"></div>
-                <div class="keys control">LEFT</div>
+                <div class="keys control" data-action="LEFT" data-state="UNASSIGNED">LEFT</div>
                 <div class="keys dummy"></div>
-                <div class="keys control">RIGHT</div>
+                <div class="keys control" data-action="RIGHT" data-state="UNASSIGNED">RIGHT</div>
                 <div class="keys dummy"></div>
-                <div class="keys control">DOWN</div>
+                <div class="keys control" data-action="DOWN" data-state="UNASSIGNED">DOWN</div>
                 <div class="keys dummy"></div>
             </div>
             <div class="fire">
-                <div class="shoot">SHOOT</div>
+                <div class="shoot" data-action="SHOOT">SHOOT</div>
             </div>
         </div>
     </div>

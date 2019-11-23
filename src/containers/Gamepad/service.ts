@@ -1,7 +1,11 @@
 import { truthy } from 'helpers';
 import { dispatch } from 'state/store';
 
-import { gamepadButtonPress, gamepadConnected, gamepadDisconnected } from './state/actions';
+import { gamepadButtonPress, gamepadConnected, gamepadDisconnected, listenToKeyBinding } from './state/actions';
+import { GamepadControls } from './state/interfaces';
+
+const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');
+const gamepadControllerContainer: HTMLElement | null = gamepadContainer!.querySelector('.controller');
 
 const getGamepads = () => Array.from(navigator.getGamepads()).filter(truthy);
 
@@ -36,11 +40,20 @@ const listenForGamepadButtons = () => {
     setInterval(onGamepadButtonPressed, 100);
 };
 
+const addConfigurationHandlers = () => {
+    gamepadControllerContainer!.addEventListener('click', (event: MouseEvent) => {
+        const target = event.target as HTMLDivElement;
+        gamepadControllerContainer!.classList.add('disable');
+        dispatch(listenToKeyBinding(target.getAttribute('data-action') as GamepadControls));
+    });
+};
+
 export const addSupportForGamepadIfAvailable = () => {
     const isGamepadSupported = Boolean(navigator.getGamepads);
     if (isGamepadSupported) {
         listenForGamepadConnect();
         listenForGamepadDisconnect();
         listenForGamepadButtons();
+        addConfigurationHandlers();
     }
 };

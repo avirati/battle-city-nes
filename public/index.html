@@ -45,9 +45,10 @@
             text-align: center;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
-        .gamepad .title {
+        .gamepad .title, .gamepad .footer {
             height: 60px;
             background-color: #000;
             color: #fff;
@@ -60,7 +61,6 @@
             border-radius: 30px;
             display: flex;
             margin: 0 auto;
-            margin-top: 100px;
             padding: 20px;
             justify-content: space-between;
             box-shadow: 0 0 10px #AAAAAA;
@@ -107,7 +107,7 @@
     <div id="app" class="app"></div>
     <div id="gamepad" class="gamepad">
         <div class="title">Configure Controls (Gamepads Supported)</div>
-        <div class="controller">
+        <div class="controller disable">
             <div class="movement">
                 <div class="keys dummy"></div>
                 <div class="keys control" data-action="GAMEPAD_UP" data-state="UNASSIGNED">UP</div>
@@ -122,6 +122,9 @@
             <div class="fire">
                 <div class="shoot" data-action="GAMEPAD_SHOOT">SHOOT</div>
             </div>
+        </div>
+        <div class="footer">
+            Connect your Gamepad Controller. If already connected, press any key.
         </div>
     </div>
     <div id="menu" class="menu"></div>

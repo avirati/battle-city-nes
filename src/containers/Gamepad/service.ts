@@ -6,6 +6,7 @@ import { GamepadControls, IGamepadDOMEvents } from './state/interfaces';
 
 const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');
 const gamepadControllerContainer: HTMLElement | null = gamepadContainer!.querySelector('.controller');
+const gamepadFooter: HTMLElement | null = gamepadContainer!.querySelector('.footer');
 
 const getGamepads = () => Array.from(navigator.getGamepads()).filter(truthy);
 
@@ -18,14 +19,19 @@ const listenForGamepadConnect = () => {
         gamepad!.buttons.forEach((button, index) => buttonMap.set(index, button.pressed));
         gamepadButtons.set(gamepad!.id, buttonMap);
         dispatch(gamepadConnected(gamepad!));
+
+        gamepadControllerContainer!.classList.remove('disable');
+        gamepadFooter!.innerText = 'Gamepad Connected !';
     });
 };
 
 const listenForGamepadDisconnect = () => {
-    window.addEventListener('gamepaddisconnected', () => {
-        const gamepad = getGamepads()[0];
+    window.addEventListener('gamepaddisconnected', (event: Event) => {
+        const { gamepad } = (event as GamepadEvent);
         gamepadButtons.delete(gamepad!.id);
         dispatch(gamepadDisconnected(gamepad!));
+        gamepadControllerContainer!.classList.add('disable');
+        gamepadFooter!.innerText = 'Gamepad Disconnected !';
     });
 };
 

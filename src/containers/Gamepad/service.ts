@@ -13,15 +13,12 @@ const gamepadFooter: HTMLElement | null = gamepadContainer!.querySelector('.foot
 const listenForGamepadConnect = () => {
     gameControl.on('connect', (gamepad: IGamepadObject) => {
         addButtonListeners(gamepad);
-
-        gamepadControllerContainer!.classList.remove('disable');
         gamepadFooter!.innerText = 'Gamepad Connected !';
     });
 };
 
 const listenForGamepadDisconnect = () => {
     gameControl.on('disconnect', () => {
-        gamepadControllerContainer!.classList.add('disable');
         gamepadFooter!.innerText = 'Gamepad Disconnected !';
     });
 };

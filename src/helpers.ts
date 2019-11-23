@@ -8,3 +8,5 @@ export const getScreenDimension = (): IDimension => {
         width: VIEWPORT_SIZE,
     };
 };
+
+export const truthy = (val: any) => Boolean(val);

@@ -2,6 +2,7 @@
 
 import { getArenaCanvas, initArenaView, initLevelDesigner } from 'containers/Arena/service';
 import { fillArenaWith } from 'containers/Arena/state/actions';
+import { addSupportForGamepadIfAvailable } from 'containers/Gamepad/service';
 import { getTankViewCanvas, initTankView } from 'containers/Tanks/service';
 import { INVALID_CONTAINER_ID } from 'global/errors';
 import { CellType } from 'models/Cell';
@@ -30,6 +31,8 @@ const renderSinglePlayerGame = (container: HTMLElement | null) => {
 
     container.appendChild(getTankViewCanvas());
     initTankView();
+
+    addSupportForGamepadIfAvailable();
 };
 
 const startApp = () => {

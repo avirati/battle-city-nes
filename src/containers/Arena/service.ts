@@ -35,6 +35,14 @@ const setSize = () => {
     const size = width > height ? height : width;
     canvas.width = size;
     canvas.height = size;
+
+    const app = document.getElementById('app');
+    app!.style.width = width + 'px';
+    app!.style.height = height + 'px';
+
+    const gamepad = document.getElementById('gamepad');
+    gamepad!.style.width = `calc(100% - ${width}px)`;
+    gamepad!.style.height = height + 'px';
 };
 
 const clearScene = () => {

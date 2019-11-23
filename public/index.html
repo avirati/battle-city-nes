@@ -8,6 +8,7 @@
     <style>
         body {
             margin: 0;
+            display: flex;
         }
         canvas {
             border: 1px solid #CCCCCC;
@@ -34,10 +35,91 @@
             font-family: monospace;
             width: 80px;
         }
+
+        .app {
+            display: inline-block;
+        }
+
+        .gamepad {
+            display: inline-block;
+            font-family: arial;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gamepad .title {
+            height: 60px;
+            background-color: #000;
+            color: #fff;
+            line-height: 3.5;
+        }
+
+        .gamepad .player {
+            width: 300px;
+            border: 1px solid #aaa;
+            border-radius: 30px;
+            display: flex;
+            margin: 0 auto;
+            margin-top: 100px;
+            padding: 20px;
+            justify-content: space-between;
+            box-shadow: 0 0 10px #AAAAAA;
+        }
+
+        .gamepad .movement {
+            display: flex;
+            flex-wrap: wrap;
+            width: 150px;
+        }
+
+        .gamepad .fire {
+            display: flex;
+            align-items: center;
+        }
+
+        .gamepad .fire .shoot {
+            background-color: #666;
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            line-height: 6.5;
+            color: #FFF;
+        }
+
+        .gamepad .player .keys {
+            width: 50px;
+            height: 50px;
+        }
+
+        .gamepad .player .keys.control {
+            background-color: #CCCCCC;
+            line-height: 4;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app" class="app"></div>
+    <div id="gamepad" class="gamepad">
+        <div class="title">Configure Controls (Gamepads Supported)</div>
+        <div class="player">
+            <div class="movement">
+                <div class="keys dummy"></div>
+                <div class="keys control">UP</div>
+                <div class="keys dummy"></div>
+                <div class="keys control">LEFT</div>
+                <div class="keys dummy"></div>
+                <div class="keys control">RIGHT</div>
+                <div class="keys dummy"></div>
+                <div class="keys control">DOWN</div>
+                <div class="keys dummy"></div>
+            </div>
+            <div class="fire">
+                <div class="shoot">SHOOT</div>
+            </div>
+        </div>
+    </div>
     <div id="menu" class="menu"></div>
     <div id="dialog" class="dialog"></div>
 </body>

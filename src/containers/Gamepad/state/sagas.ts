@@ -7,7 +7,7 @@ import {
     saveKeyBinding,
     ActionTypes,
 } from './actions';
-import { GamepadControls, IGamepadState, IGamepadDOMEvents } from './interfaces';
+import { GamepadControls, IGamepadDOMEvents, IGamepadState } from './interfaces';
 import { gamepadKeyBindingsSelector } from './selectors';
 
 const gamepadContainer: HTMLElement | null = document.getElementById('gamepad');

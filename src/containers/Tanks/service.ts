@@ -1,4 +1,4 @@
-import { GamepadControls, IGamepadState, IGamepadDOMEvents } from 'containers/Gamepad/state/interfaces';
+import { GamepadControls, IGamepadDOMEvents, IGamepadState } from 'containers/Gamepad/state/interfaces';
 import {
     ARENA_SIZE,
     CELL_SIZE,
@@ -449,7 +449,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
         ].includes(key)) {
             stopMoving();
         }
-    }
+    };
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
         const key = event.keyCode || event.which;

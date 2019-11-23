@@ -1,3 +1,5 @@
+import 'gamecontroller.js/src/index';
+
 import { truthy } from 'helpers';
 import { dispatch } from 'state/store';
 

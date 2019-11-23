@@ -1843,6 +1843,11 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
+gamecontroller.js@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/gamecontroller.js/-/gamecontroller.js-1.4.2.tgz#75cc0623a042f44e9871835f62ae2b3c588fb7ac"
+  integrity sha512-Wi5xTEVVVlBg7O8j3AZNdBSOAMW+tqYb8r0eM/x1B+Hv2Gyo+wMJ7DBDmM/xgb13KiGeiSYYUyEbmZT4bTkD4Q==
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"

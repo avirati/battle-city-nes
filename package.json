@@ -11,6 +11,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^5.0.0",
     "copy-webpack-plugin": "^5.0.5",
+    "gamecontroller.js": "^1.4.2",
     "html-webpack-plugin": "^3.2.0",
     "http-server": "^0.11.1",
     "redux": "^4.0.4",

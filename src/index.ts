@@ -1,4 +1,5 @@
 /// <reference path='global/global.d.ts' />
+/// <reference path='typedefs/gamecontroller.d.ts' />
 
 import { getArenaCanvas, initArenaView, initLevelDesigner } from 'containers/Arena/service';
 import { fillArenaWith } from 'containers/Arena/state/actions';

@@ -1,4 +1,4 @@
-import 'gamecontroller.js/dist/gamecontroller.min';
+import 'gamecontroller.js/dist/gamecontroller';
 
 import { dispatch } from 'state/store';
 

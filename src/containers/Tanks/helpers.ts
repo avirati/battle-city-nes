@@ -1,26 +1,28 @@
 import {
-    TANK_IMAGE_BACKWARD,
-    TANK_IMAGE_FORWARD,
-    TANK_IMAGE_LEFT,
-    TANK_IMAGE_RIGHT,
+    TANK_SPRITES,
 } from 'global/constants';
-import { TankDirection } from 'models/Tank';
+import { TankDirection, TankType } from 'models/Tank';
 
-export const getTankImage = (tankDirection: TankDirection): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
+export const getTankImage = (tankType: TankType, tankDirection: TankDirection): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
     const image = new Image();
-    switch (tankDirection) {
-        case TankDirection.FORWARD:
-            image.src = TANK_IMAGE_FORWARD;
+    switch (tankType) {
+        case TankType.PLAYER: {
+            switch (tankDirection) {
+                case TankDirection.FORWARD:
+                    image.src = TANK_SPRITES.PLAYER_TANK_IMAGE.FORWARD;
+                    break;
+                case TankDirection.BACKWARD:
+                    image.src = TANK_SPRITES.PLAYER_TANK_IMAGE.BACKWARD;
+                    break;
+                case TankDirection.RIGHT:
+                    image.src = TANK_SPRITES.PLAYER_TANK_IMAGE.RIGHT;
+                    break;
+                case TankDirection.LEFT:
+                    image.src = TANK_SPRITES.PLAYER_TANK_IMAGE.LEFT;
+                    break;
+            }
             break;
-        case TankDirection.BACKWARD:
-            image.src = TANK_IMAGE_BACKWARD;
-            break;
-        case TankDirection.RIGHT:
-            image.src = TANK_IMAGE_RIGHT;
-            break;
-        case TankDirection.LEFT:
-            image.src = TANK_IMAGE_LEFT;
-            break;
+        }
     }
 
     image.onload = () => resolve(image);

@@ -87,7 +87,7 @@ export class Tank implements ITank {
 
     public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(cell.type);
 
-    public getSprite = () => this.sprites.get(this.direction);
+    public getSprite = () => this.sprites.get(this.getSpriteKey(this.type, this.direction));
 
     private getShellPosition = (): Coordinate => {
         switch (this.direction) {
@@ -114,21 +114,23 @@ export class Tank implements ITank {
 
     private downloadSprites = async () => {
         const imagePromises = [
-            getTankImage(TankDirection.FORWARD),
-            getTankImage(TankDirection.BACKWARD),
-            getTankImage(TankDirection.RIGHT),
-            getTankImage(TankDirection.LEFT),
+            getTankImage(TankType.PLAYER, TankDirection.FORWARD),
+            getTankImage(TankType.PLAYER, TankDirection.BACKWARD),
+            getTankImage(TankType.PLAYER, TankDirection.RIGHT),
+            getTankImage(TankType.PLAYER, TankDirection.LEFT),
         ];
         const [
-            tankImageForward,
-            tankImageBackward,
-            tankImageRight,
-            tankImageLeft,
+            playerTankImageForward,
+            playerTankImageBackward,
+            playerTankImageRight,
+            playerTankImageLeft,
         ] = await Promise.all(imagePromises);
 
-        this.sprites.set(TankDirection.FORWARD, tankImageForward);
-        this.sprites.set(TankDirection.BACKWARD, tankImageBackward);
-        this.sprites.set(TankDirection.RIGHT, tankImageRight);
-        this.sprites.set(TankDirection.LEFT, tankImageLeft);
+        this.sprites.set(this.getSpriteKey(this.type, TankDirection.FORWARD), playerTankImageForward);
+        this.sprites.set(this.getSpriteKey(this.type, TankDirection.BACKWARD), playerTankImageBackward);
+        this.sprites.set(this.getSpriteKey(this.type, TankDirection.RIGHT), playerTankImageRight);
+        this.sprites.set(this.getSpriteKey(this.type, TankDirection.LEFT), playerTankImageLeft);
     }
+
+    private getSpriteKey = (type: TankType, direction: TankDirection) => `${type}_${direction}`;
 }

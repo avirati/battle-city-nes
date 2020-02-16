@@ -16,6 +16,21 @@ function saveKeyBindingSuccess() {
         TANK_SPAWN_POSITION.BOTTOM_LEFT,
         TankType.PLAYER,
     );
+    spawnTank(
+        TankDirection.FORWARD,
+        TANK_SPAWN_POSITION.BOTTOM_RIGHT,
+        TankType.BOT,
+    );
+    spawnTank(
+        TankDirection.BACKWARD,
+        TANK_SPAWN_POSITION.TOP_LEFT,
+        TankType.BOT,
+    );
+    spawnTank(
+        TankDirection.BACKWARD,
+        TANK_SPAWN_POSITION.TOP_RIGHT,
+        TankType.BOT,
+    );
 }
 
 export const sagas = [

@@ -118,18 +118,33 @@ export class Tank implements ITank {
             getTankImage(TankType.PLAYER, TankDirection.BACKWARD),
             getTankImage(TankType.PLAYER, TankDirection.RIGHT),
             getTankImage(TankType.PLAYER, TankDirection.LEFT),
+
+            getTankImage(TankType.BOT, TankDirection.FORWARD),
+            getTankImage(TankType.BOT, TankDirection.BACKWARD),
+            getTankImage(TankType.BOT, TankDirection.RIGHT),
+            getTankImage(TankType.BOT, TankDirection.LEFT),
         ];
         const [
             playerTankImageForward,
             playerTankImageBackward,
             playerTankImageRight,
             playerTankImageLeft,
+
+            botTankImageForward,
+            botTankImageBackward,
+            botTankImageRight,
+            botTankImageLeft,
         ] = await Promise.all(imagePromises);
 
-        this.sprites.set(this.getSpriteKey(this.type, TankDirection.FORWARD), playerTankImageForward);
-        this.sprites.set(this.getSpriteKey(this.type, TankDirection.BACKWARD), playerTankImageBackward);
-        this.sprites.set(this.getSpriteKey(this.type, TankDirection.RIGHT), playerTankImageRight);
-        this.sprites.set(this.getSpriteKey(this.type, TankDirection.LEFT), playerTankImageLeft);
+        this.sprites.set(this.getSpriteKey(TankType.PLAYER, TankDirection.FORWARD), playerTankImageForward);
+        this.sprites.set(this.getSpriteKey(TankType.PLAYER, TankDirection.BACKWARD), playerTankImageBackward);
+        this.sprites.set(this.getSpriteKey(TankType.PLAYER, TankDirection.RIGHT), playerTankImageRight);
+        this.sprites.set(this.getSpriteKey(TankType.PLAYER, TankDirection.LEFT), playerTankImageLeft);
+
+        this.sprites.set(this.getSpriteKey(TankType.BOT, TankDirection.FORWARD), botTankImageForward);
+        this.sprites.set(this.getSpriteKey(TankType.BOT, TankDirection.BACKWARD), botTankImageBackward);
+        this.sprites.set(this.getSpriteKey(TankType.BOT, TankDirection.RIGHT), botTankImageRight);
+        this.sprites.set(this.getSpriteKey(TankType.BOT, TankDirection.LEFT), botTankImageLeft);
     }
 
     private getSpriteKey = (type: TankType, direction: TankDirection) => `${type}_${direction}`;

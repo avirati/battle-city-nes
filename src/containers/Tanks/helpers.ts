@@ -23,6 +23,23 @@ export const getTankImage = (tankType: TankType, tankDirection: TankDirection): 
             }
             break;
         }
+        case TankType.BOT: {
+            switch (tankDirection) {
+                case TankDirection.FORWARD:
+                    image.src = TANK_SPRITES.BOT_TANK_IMAGE.FORWARD;
+                    break;
+                case TankDirection.BACKWARD:
+                    image.src = TANK_SPRITES.BOT_TANK_IMAGE.BACKWARD;
+                    break;
+                case TankDirection.RIGHT:
+                    image.src = TANK_SPRITES.BOT_TANK_IMAGE.RIGHT;
+                    break;
+                case TankDirection.LEFT:
+                    image.src = TANK_SPRITES.BOT_TANK_IMAGE.LEFT;
+                    break;
+            }
+            break;
+        }
     }
 
     image.onload = () => resolve(image);

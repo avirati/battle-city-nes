@@ -9,17 +9,13 @@ import {
     SHELL_IMAGE_RIGHT,
     SHELL_SIZE,
     TANK_FPS,
-    TANK_IMAGE_BACKWARD,
-    TANK_IMAGE_FORWARD,
-    TANK_IMAGE_LEFT,
-    TANK_IMAGE_RIGHT,
     TANK_SIZE,
-    TANK_SPAWN_POSITION_BOTTOM_LEFT,
     VIEWPORT_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
+import { Coordinate } from 'models/Coordinate';
 import { Shell } from 'models/Shell';
-import { Tank, TankDirection } from 'models/Tank';
+import { Tank, TankDirection, TankType } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
@@ -30,13 +26,24 @@ import { getArenaMatrixSelector } from '../Arena/state/selectors';
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
 const dialog: HTMLElement | null = document.getElementById('dialog');
-const tankSprites: Map<string, HTMLImageElement> = new Map();
 const shellSprites: Map<string, HTMLImageElement> = new Map();
 
-const tank: Tank = new Tank({
-    direction: TankDirection.FORWARD,
-    position: TANK_SPAWN_POSITION_BOTTOM_LEFT,
-});
+const tanks: Tank[] = [];
+let playerTank: Tank;
+
+export const spawnTank = (direction: TankDirection, position: Coordinate, type: TankType) => {
+    const tank = new Tank({
+        direction,
+        position,
+        type,
+    });
+    tanks.push(tank);
+
+    if (type === TankType.PLAYER) {
+        playerTank = tank;
+    }
+};
+
 const projectiles: Map<number, Shell> = new Map();
 
 const setSize = () => {
@@ -49,27 +56,6 @@ const setSize = () => {
 const clearScene = () => {
     context!.clearRect(0, 0, canvas.width, canvas.height);
 };
-
-const getTankImage = (tankDirection: TankDirection): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
-    const image = new Image();
-    switch (tankDirection) {
-        case TankDirection.FORWARD:
-            image.src = TANK_IMAGE_FORWARD;
-            break;
-        case TankDirection.BACKWARD:
-            image.src = TANK_IMAGE_BACKWARD;
-            break;
-        case TankDirection.RIGHT:
-            image.src = TANK_IMAGE_RIGHT;
-            break;
-        case TankDirection.LEFT:
-            image.src = TANK_IMAGE_LEFT;
-            break;
-    }
-
-    image.onload = () => resolve(image);
-    image.onerror = (err) => reject(err);
-});
 
 const getShellImage = (shellDirection: TankDirection): Promise<HTMLImageElement> => new Promise((resolve, reject) => {
     const image = new Image();
@@ -94,32 +80,17 @@ const getShellImage = (shellDirection: TankDirection): Promise<HTMLImageElement>
 
 const downloadTextures = async (): Promise<void> => {
     const imagePromises = [
-        getTankImage(TankDirection.FORWARD),
-        getTankImage(TankDirection.BACKWARD),
-        getTankImage(TankDirection.RIGHT),
-        getTankImage(TankDirection.LEFT),
-
         getShellImage(TankDirection.FORWARD),
         getShellImage(TankDirection.BACKWARD),
         getShellImage(TankDirection.RIGHT),
         getShellImage(TankDirection.LEFT),
     ];
     const [
-        tankImageForward,
-        tankImageBackward,
-        tankImageRight,
-        tankImageLeft,
-
         shellImageForward,
         shellImageBackward,
         shellImageRight,
         shellImageLeft,
     ] = await Promise.all(imagePromises);
-
-    tankSprites.set(TankDirection.FORWARD, tankImageForward);
-    tankSprites.set(TankDirection.BACKWARD, tankImageBackward);
-    tankSprites.set(TankDirection.RIGHT, tankImageRight);
-    tankSprites.set(TankDirection.LEFT, tankImageLeft);
 
     shellSprites.set(TankDirection.FORWARD, shellImageForward);
     shellSprites.set(TankDirection.BACKWARD, shellImageBackward);
@@ -137,19 +108,21 @@ const render = () => {
 };
 
 const renderTanksForOneFrame = () => {
-    context!.drawImage(
-        tankSprites.get(tank.direction)!,
-        tank.position.x,
-        tank.position.y,
-        TANK_SIZE,
-        TANK_SIZE,
-    );
+    tanks.forEach((tank) => {
+        context!.drawImage(
+            tank.getSprite()!,
+            tank.position.x,
+            tank.position.y,
+            TANK_SIZE,
+            TANK_SIZE,
+        );
 
-    if (__DEV__) {
-        context!.strokeStyle = '#FFFFFF';
-        context!.lineWidth = 2;
-        context!.strokeRect(tank.position.x, tank.position.y, TANK_SIZE, TANK_SIZE);
-    }
+        if (__DEV__) {
+            context!.strokeStyle = '#FFFFFF';
+            context!.lineWidth = 2;
+            context!.strokeRect(tank.position.x, tank.position.y, TANK_SIZE, TANK_SIZE);
+        }
+    });
 };
 
 const renderShellsForOneFrame = () => {
@@ -181,7 +154,7 @@ const renderShellsForOneFrame = () => {
 };
 
 const canMove = (): boolean =>
-        isWithinTheWorld(tank, TANK_SIZE) && !isCollidingWithWorld(tank);
+        isWithinTheWorld(playerTank, TANK_SIZE) && !isCollidingWithWorld(playerTank);
 
 const isWithinTheWorld = (object: Tank | Shell, objectSize: number): boolean => {
     const position = object.position;
@@ -374,39 +347,39 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     const move = (direction: TankDirection) => {
         switch (direction) {
             case TankDirection.FORWARD:
-                if (tank.direction === TankDirection.FORWARD) {
+                if (playerTank.direction === TankDirection.FORWARD) {
                     if (canMove()) {
-                        tank.move(TankDirection.FORWARD);
+                        playerTank.move(TankDirection.FORWARD);
                     }
                 } else {
-                    tank.changeDirection(TankDirection.FORWARD);
+                    playerTank.changeDirection(TankDirection.FORWARD);
                 }
                 break;
             case TankDirection.BACKWARD: // DOWN Arrow
-                if (tank.direction === TankDirection.BACKWARD) {
+                if (playerTank.direction === TankDirection.BACKWARD) {
                     if (canMove()) {
-                        tank.move(TankDirection.BACKWARD);
+                        playerTank.move(TankDirection.BACKWARD);
                     }
                 } else {
-                    tank.changeDirection(TankDirection.BACKWARD);
+                    playerTank.changeDirection(TankDirection.BACKWARD);
                 }
                 break;
             case TankDirection.RIGHT: // RIGHT Arrow
-                if (tank.direction === TankDirection.RIGHT) {
+                if (playerTank.direction === TankDirection.RIGHT) {
                     if (canMove()) {
-                        tank.move(TankDirection.RIGHT);
+                        playerTank.move(TankDirection.RIGHT);
                     }
                 } else {
-                    tank.changeDirection(TankDirection.RIGHT);
+                    playerTank.changeDirection(TankDirection.RIGHT);
                 }
                 break;
             case TankDirection.LEFT:
-                if (tank.direction === TankDirection.LEFT) {
+                if (playerTank.direction === TankDirection.LEFT) {
                     if (canMove()) {
-                        tank.move(TankDirection.LEFT);
+                        playerTank.move(TankDirection.LEFT);
                     }
                 } else {
-                    tank.changeDirection(TankDirection.LEFT);
+                    playerTank.changeDirection(TankDirection.LEFT);
                 }
                 break;
         }
@@ -434,7 +407,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
                 break;
 
             case gamepadKeyBindings[GamepadControls.GAMEPAD_SHOOT]:
-                const shell = tank.fire();
+                const shell = playerTank.fire();
                 projectiles.set(shell.getId(), shell);
                 break;
         }
@@ -452,14 +425,17 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     };
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-        const key = event.keyCode || event.which;
-
-        onKeyDown(key);
+        if (playerTank) {
+            const key = event.keyCode || event.which;
+            onKeyDown(key);
+        }
     });
 
     document.addEventListener('gamepadkeydown', (event: Event) => {
-        const { buttonName } = (event as CustomEvent<IGamepadDOMEvents>).detail;
-        onKeyDown(buttonName);  // TODO: Multiple button press will not work here
+        if (playerTank) {
+            const { buttonName } = (event as CustomEvent<IGamepadDOMEvents>).detail;
+            onKeyDown(buttonName);  // TODO: Multiple button press will not work here
+        }
     });
 
     document.addEventListener('keyup', (event: KeyboardEvent) => {

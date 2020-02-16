@@ -5,6 +5,7 @@ import { GamepadControls } from './interfaces';
 export enum ActionTypes {
     LISTEN_TO_KEY_BINDING = 'gamepad/LISTEN_TO_KEY_BINDING',
     SAVE_KEY_BINDING = 'gamepad/SAVE_KEY_BINDING',
+    SAVE_KEY_BINDING_SUCCESS = 'gamepad/SAVE_KEY_BINDING_SUCCESS',
 }
 
 export const listenToKeyBinding = (gamepadKey: GamepadControls): IReduxAction<ActionTypes.LISTEN_TO_KEY_BINDING, { gamepadKey: GamepadControls }> => ({
@@ -20,7 +21,12 @@ export const saveKeyBinding = (gamepadKey: GamepadControls, boundKey: GameContro
     type: ActionTypes.SAVE_KEY_BINDING,
 });
 
+export const saveKeyBindingSuccess = (): IReduxAction<ActionTypes.SAVE_KEY_BINDING_SUCCESS, void> => ({
+    type: ActionTypes.SAVE_KEY_BINDING_SUCCESS,
+});
+
 export type Actions =
     | ReturnType<typeof listenToKeyBinding>
     | ReturnType<typeof saveKeyBinding>
+    | ReturnType<typeof saveKeyBindingSuccess>
     ;

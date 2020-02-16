@@ -1,10 +1,11 @@
 import { addKeyBindings } from 'containers/Tanks/service';
-import { select, takeLatest } from 'redux-saga/effects';
+import { put, select, takeLatest } from 'redux-saga/effects';
 import { dispatch } from 'state/store';
 
 import {
     listenToKeyBinding,
     saveKeyBinding,
+    saveKeyBindingSuccess,
     ActionTypes,
 } from './actions';
 import { GamepadControls, IGamepadDOMEvents, IGamepadState } from './interfaces';
@@ -64,6 +65,7 @@ function * saveKeyBindingSaga() {
 
     if (isEveryKeyMapped) {
         addKeyBindings(gamepadKeyBindings);
+        yield put(saveKeyBindingSuccess());
     }
 }
 

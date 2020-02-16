@@ -1,3 +1,4 @@
+import { getTankImage } from 'containers/Tanks/helpers';
 import { SHELL_SIZE, TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
 
 import { Cell, CellType } from './Cell';
@@ -14,9 +15,15 @@ export enum TankDirection {
 export const TANK_DEFAULT_SPEED = 3;
 export const TANK_DEFAULT_HP = 100;
 
+export enum TankType {
+    PLAYER = 'PLAYER',
+    BOT = 'BOT',
+}
+
 export interface ITankProps {
     direction: TankDirection;
     position: Coordinate;
+    type: TankType;
 }
 
 export interface ITank extends ITankProps {
@@ -38,14 +45,20 @@ export class Tank implements ITank {
     public position: Coordinate;
     public size: number;
     public occupiedCells: number;
+    public type: TankType;
 
-    constructor({ direction, position }: ITankProps) {
+    private sprites: Map<string, HTMLImageElement> = new Map();
+
+    constructor({ direction, position, type }: ITankProps) {
         this.HP = TANK_DEFAULT_HP;
         this.speed = TANK_DEFAULT_SPEED;
         this.direction = direction;
         this.position = position;
         this.size = TANK_SIZE;
         this.occupiedCells = TANK_SIZE_IN_CELLS;
+        this.type = type;
+
+        this.downloadSprites();
     }
 
     public move = (direction: TankDirection) => {
@@ -74,6 +87,8 @@ export class Tank implements ITank {
 
     public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(cell.type);
 
+    public getSprite = () => this.sprites.get(this.direction);
+
     private getShellPosition = (): Coordinate => {
         switch (this.direction) {
             case TankDirection.FORWARD:
@@ -95,5 +110,25 @@ export class Tank implements ITank {
             default:
                 return this.position;
         }
+    }
+
+    private downloadSprites = async () => {
+        const imagePromises = [
+            getTankImage(TankDirection.FORWARD),
+            getTankImage(TankDirection.BACKWARD),
+            getTankImage(TankDirection.RIGHT),
+            getTankImage(TankDirection.LEFT),
+        ];
+        const [
+            tankImageForward,
+            tankImageBackward,
+            tankImageRight,
+            tankImageLeft,
+        ] = await Promise.all(imagePromises);
+
+        this.sprites.set(TankDirection.FORWARD, tankImageForward);
+        this.sprites.set(TankDirection.BACKWARD, tankImageBackward);
+        this.sprites.set(TankDirection.RIGHT, tankImageRight);
+        this.sprites.set(TankDirection.LEFT, tankImageLeft);
     }
 }

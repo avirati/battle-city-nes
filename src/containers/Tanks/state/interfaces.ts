@@ -24,6 +24,7 @@ export interface ITank extends ITankProps {
     HP: number;
     speed: number;
     size: number;
+    moving: boolean;
     occupiedCells: number;
     lastPosition: ICoordinate;
 }

@@ -35,11 +35,42 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                         ID,
                         direction,
                         lastPosition: position,
+                        moving: false,
                         occupiedCells: TANK_SIZE_IN_CELLS,
                         position,
                         size: TANK_SIZE,
                         speed: TANK_DEFAULT_SPEED,
                         type,
+                    },
+                },
+            };
+        }
+        case ActionTypes.TANK_MOVE_START: {
+            const { ID } = action.data!;
+            const tank = state.vehicles[ID];
+
+            return {
+                ...state,
+                vehicles: {
+                    ...state.vehicles,
+                    [ID]: {
+                        ...tank,
+                        moving: true,
+                    },
+                },
+            };
+        }
+        case ActionTypes.TANK_MOVE_STOP: {
+            const { ID } = action.data!;
+            const tank = state.vehicles[ID];
+
+            return {
+                ...state,
+                vehicles: {
+                    ...state.vehicles,
+                    [ID]: {
+                        ...tank,
+                        moving: false,
                     },
                 },
             };

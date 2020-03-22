@@ -9,6 +9,8 @@ import {
 export enum ActionTypes {
     TANK_SPAWN = 'tank/SPAWN',
     TANK_MOVE = 'tank/MOVE',
+    TANK_MOVE_START = 'tank/MOVE_START',
+    TANK_MOVE_STOP = 'tank/MOVE_STOP',
     TANK_FIRE = 'tank/FIRE',
     TANK_TURN = 'tank/TURN',
 
@@ -24,6 +26,16 @@ export const spawnTank = (tankProps: ITankProps): IReduxAction<ActionTypes.TANK_
 export const moveTank = (ID: ITank['ID'], direction: ITank['direction']): IReduxAction<ActionTypes.TANK_MOVE, { ID: ITank['ID'], direction: ITank['direction'] }> => ({
     data: { ID, direction },
     type: ActionTypes.TANK_MOVE,
+});
+
+export const moveTankStart = (ID: ITank['ID']): IReduxAction<ActionTypes.TANK_MOVE_START, { ID: ITank['ID'] }> => ({
+    data: { ID },
+    type: ActionTypes.TANK_MOVE_START,
+});
+
+export const moveTankStop = (ID: ITank['ID']): IReduxAction<ActionTypes.TANK_MOVE_STOP, { ID: ITank['ID'] }> => ({
+    data: { ID },
+    type: ActionTypes.TANK_MOVE_STOP,
 });
 
 export const fireTank = (tankID: ITank['ID'], shellID: IShell['ID']): IReduxAction<ActionTypes.TANK_FIRE, { tankID: ITank['ID'], shellID: IShell['ID'] }> => ({
@@ -49,6 +61,8 @@ export const destroyShells = (IDs: Array<IShell['ID']>): IReduxAction<ActionType
 export type Actions =
     | ReturnType<typeof spawnTank>
     | ReturnType<typeof moveTank>
+    | ReturnType<typeof moveTankStart>
+    | ReturnType<typeof moveTankStop>
     | ReturnType<typeof fireTank>
     | ReturnType<typeof turnTank>
     | ReturnType<typeof moveShell>

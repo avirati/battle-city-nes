@@ -21,6 +21,8 @@ import {
 import {
     fireTank,
     moveTank,
+    moveTankStart,
+    moveTankStop,
     turnTank,
 } from './state/actions';
 import { playerTankSelector } from './state/selectors';
@@ -111,12 +113,16 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     const startMoving = () => {
         if (movementTimeout === -1) {
             move(direction);
+            const playerTank = applySelector(playerTankSelector);
+            dispatch(moveTankStart(playerTank.ID));
         }
     };
 
     const stopMoving = () => {
         clearTimeout(movementTimeout);
         movementTimeout = -1;
+        const playerTank = applySelector(playerTankSelector);
+        dispatch(moveTankStop(playerTank.ID));
     };
 
     const move = (direction: TankDirection) => {

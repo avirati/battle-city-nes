@@ -1,4 +1,5 @@
 import {
+    delay,
     select,
     takeEvery,
 } from 'redux-saga/effects';
@@ -61,13 +62,27 @@ function * watchForFireTank() {
 }
 
 function * fireTankSaga(action: ReturnType<typeof fireTank>) {
-    const { shellID } = action.data!;
+    const { shellID, tankID } = action.data!;
 
     const shellRenderInterval = Math.round(1000 / SHELL_FPS);
     const intervalID = setInterval(() => {
         dispatch(moveShell(shellID));
     }, shellRenderInterval);
     shellRenderRegistry[shellID] = intervalID;
+
+    const context = getTankViewContext();
+
+    let tanks: ITanksState['vehicles'] = yield select(tanksSelector);
+    let tank = tanks[tankID];
+
+    if (!tank.moving) {
+        for (let i = 0; i < SHELL_FPS; i++) {
+            tanks = yield select(tanksSelector);
+            tank = tanks[tankID];
+            renderTank(context!, tank);
+            yield delay(1);
+        }
+    }
 }
 
 function * watchForMoveShell() {
@@ -85,9 +100,15 @@ function * moveShellSaga(action: ReturnType<typeof moveShell>) {
     if (!isWithinTheWorld(shell, SHELL_SIZE) || didImpact) {
         shellsToDestroy.push(ID);
         dispatch(registerImpactFromShell(shell));
+
+        context!.clearRect(
+            shell.lastPosition.x,
+            shell.lastPosition.y,
+            SHELL_SIZE,
+            SHELL_SIZE,
+        );
     } else {
         context!.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
-        dispatch(moveShell(shell.ID));
         context!.clearRect(
             shell.lastPosition.x,
             shell.lastPosition.y,
@@ -114,7 +135,6 @@ function * watchForDestroyShells() {
 
 function * destroyShellsSaga(action: ReturnType<typeof destroyShells>) {
     const { IDs } = action.data!;
-
     for (const ID of IDs) {
         clearInterval(shellRenderRegistry[ID]);
     }

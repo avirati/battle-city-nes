@@ -1,3 +1,5 @@
+import { v1 as uuid } from 'uuid';
+
 import { getTankImage } from 'containers/Tanks/helpers';
 import { SHELL_SIZE, TANK_SIZE, TANK_SIZE_IN_CELLS } from 'global/constants';
 
@@ -27,6 +29,7 @@ export interface ITankProps {
 }
 
 export interface ITank extends ITankProps {
+    ID: string;
     HP: number;
     speed: number;
     size: number;
@@ -39,6 +42,7 @@ export interface ITank extends ITankProps {
 }
 
 export class Tank implements ITank {
+    public ID: string;
     public HP: number;
     public speed: number;
     public direction: TankDirection;
@@ -50,6 +54,7 @@ export class Tank implements ITank {
     private sprites: Map<string, HTMLImageElement> = new Map();
 
     constructor({ direction, position, type }: ITankProps) {
+        this.ID = uuid();
         this.HP = TANK_DEFAULT_HP;
         this.speed = TANK_DEFAULT_SPEED;
         this.direction = direction;
@@ -88,6 +93,8 @@ export class Tank implements ITank {
     public willCollideWithCell = (cell: Cell) => [CellType.BRICK, CellType.EAGLE, CellType.STEEL, CellType.WATER].includes(cell.type);
 
     public getSprite = () => this.sprites.get(this.getSpriteKey(this.type, this.direction));
+
+    public getID = () => this.ID;
 
     private getShellPosition = (): Coordinate => {
         switch (this.direction) {

@@ -1,5 +1,3 @@
-import { v1 as uuid } from 'uuid';
-
 import {
     SHELL_SIZE,
     SHELL_SIZE_IN_CELLS,
@@ -26,22 +24,22 @@ const initialState: ITanksState = {
 export const reducer = (state: ITanksState = initialState, action: Actions): ITanksState => {
     switch (action.type) {
         case ActionTypes.TANK_SPAWN: {
-            const ID = uuid();
+            const { ID, direction, position, type } = action.data!;
             return {
                 ...state,
-                playerID: action.data!.type === TankType.PLAYER ? ID : state.playerID,
+                playerID: type === TankType.PLAYER ? ID : state.playerID,
                 vehicles: {
                     ...state.vehicles,
                     [ID]: {
                         HP: TANK_DEFAULT_HP,
                         ID,
-                        direction: action.data!.direction,
-                        lastPosition: action.data!.position,
+                        direction,
+                        lastPosition: position,
                         occupiedCells: TANK_SIZE_IN_CELLS,
-                        position: action.data!.position,
+                        position,
                         size: TANK_SIZE,
                         speed: TANK_DEFAULT_SPEED,
-                        type: action.data!.type,
+                        type,
                     },
                 },
             };

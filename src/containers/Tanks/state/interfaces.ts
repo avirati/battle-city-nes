@@ -14,13 +14,13 @@ export enum TankType {
 }
 
 export interface ITankProps {
+    ID: string;
     direction: TankDirection;
     position: ICoordinate;
     type: TankType;
 }
 
 export interface ITank extends ITankProps {
-    ID: string;
     HP: number;
     speed: number;
     size: number;

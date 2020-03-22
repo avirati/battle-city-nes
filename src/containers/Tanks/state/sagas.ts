@@ -3,27 +3,45 @@ import {
     takeEvery,
 } from 'redux-saga/effects';
 
+import { registerImpactFromShell } from 'containers/Arena/state/actions';
 import {
     SHELL_FPS,
     SHELL_SIZE,
-    TANK_SIZE,
 } from 'global/constants';
 import { dispatch } from 'state/store';
 
-import { registerImpactFromShell } from 'src/containers/Arena/state/actions';
-import { getShellSprite, getTankSprite, isCollidingWithWorld, isWithinTheWorld } from '../helpers';
+import {
+    getShellSprite,
+    isCollidingWithWorld,
+    isWithinTheWorld,
+    renderTank,
+} from '../helpers';
 import { getTankViewContext } from '../service';
 import {
     destroyShells,
     fireTank,
     moveShell,
     moveTank,
+    spawnTank,
     ActionTypes,
 } from './actions';
 import { ITanksState } from './interfaces';
 import { shellsSelector, tanksSelector } from './selectors';
 
 const shellRenderRegistry: { [shellID: string]: NodeJS.Timeout } = {};
+
+function * watchForSpawnTank() {
+    yield takeEvery(ActionTypes.TANK_SPAWN, spawnTankSaga);
+}
+
+function * spawnTankSaga(action: ReturnType<typeof spawnTank>) {
+    const { ID } = action.data!;
+    const context = getTankViewContext();
+    const tanks: ITanksState['vehicles'] = yield select(tanksSelector);
+    const tank = tanks[ID];
+
+    renderTank(context!, tank);
+}
 
 function * watchForMoveTank() {
     yield takeEvery(ActionTypes.TANK_MOVE, moveTankSaga);
@@ -35,26 +53,7 @@ function * moveTankSaga(action: ReturnType<typeof moveTank>) {
     const tanks: ITanksState['vehicles'] = yield select(tanksSelector);
     const tank = tanks[ID];
 
-    context!.clearRect(
-        tank.lastPosition.x,
-        tank.lastPosition.y,
-        TANK_SIZE,
-        TANK_SIZE,
-    );
-
-    context!.drawImage(
-        getTankSprite(tank.type, tank.direction)!,
-        tank.position.x,
-        tank.position.y,
-        TANK_SIZE,
-        TANK_SIZE,
-    );
-
-    if (__DEV__) {
-        context!.strokeStyle = '#FFFFFF';
-        context!.lineWidth = 2;
-        context!.strokeRect(tank.position.x, tank.position.y, TANK_SIZE, TANK_SIZE);
-    }
+    renderTank(context!, tank);
 }
 
 function * watchForFireTank() {
@@ -122,6 +121,7 @@ function * destroyShellsSaga(action: ReturnType<typeof destroyShells>) {
 }
 
 export const sagas = [
+    watchForSpawnTank,
     watchForMoveTank,
     watchForFireTank,
     watchForMoveShell,

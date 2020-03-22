@@ -16,6 +16,7 @@ import { Coordinate } from 'models/Coordinate';
 import { TankDirection, TankType } from 'models/Tank';
 import { applySelector } from 'state/services';
 
+import { TANK_BOUNDING_BOX_WIDTH } from './constants';
 import { IShell, ITank } from './state/interfaces';
 
 const tankSprites: Map<string, HTMLImageElement> = new Map();
@@ -263,3 +264,35 @@ export const downloadShellSprites = async (): Promise<void> => {
 };
 
 export const getShellSprite = (direction: TankDirection) => shellSprites.get(direction);
+
+export const renderTank = (context: CanvasRenderingContext2D, tank: ITank) => {
+    if (__DEV__) {
+        context.clearRect(
+            tank.lastPosition.x - TANK_BOUNDING_BOX_WIDTH,
+            tank.lastPosition.y - TANK_BOUNDING_BOX_WIDTH,
+            TANK_SIZE + TANK_BOUNDING_BOX_WIDTH * 2,
+            TANK_SIZE + TANK_BOUNDING_BOX_WIDTH * 2,
+        );
+    } else {
+        context.clearRect(
+            tank.lastPosition.x,
+            tank.lastPosition.y,
+            TANK_SIZE,
+            TANK_SIZE,
+        );
+    }
+
+    context.drawImage(
+        getTankSprite(tank.type, tank.direction)!,
+        tank.position.x,
+        tank.position.y,
+        TANK_SIZE,
+        TANK_SIZE,
+    );
+
+    if (__DEV__) {
+        context.strokeStyle = '#FFFFFF';
+        context.lineWidth = TANK_BOUNDING_BOX_WIDTH;
+        context.strokeRect(tank.position.x, tank.position.y, TANK_SIZE, TANK_SIZE);
+    }
+};

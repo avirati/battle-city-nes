@@ -1,5 +1,5 @@
+import { IShell } from 'containers/Tanks/state/interfaces';
 import { Cell, CellType, ICell } from 'models/Cell';
-import { Shell } from 'models/Shell';
 import { IReduxAction } from 'state/interfaces';
 
 export enum ActionTypes {
@@ -40,7 +40,7 @@ export const persistArenaToStore = (matrix: ICell[][]): IReduxAction<ActionTypes
     type: ActionTypes.PERSIST_ARENA_TO_STORE,
 });
 
-export const registerImpactFromShell = (shell: Shell): IReduxAction<ActionTypes.REGISTER_IMPACT_FROM_SHELL, { shell: Shell }> => ({
+export const registerImpactFromShell = (shell: IShell): IReduxAction<ActionTypes.REGISTER_IMPACT_FROM_SHELL, { shell: IShell }> => ({
     data: { shell },
     type: ActionTypes.REGISTER_IMPACT_FROM_SHELL,
 });

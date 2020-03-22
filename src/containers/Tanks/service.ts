@@ -95,7 +95,9 @@ const renderShellsForOneFrame = () => {
             }
         }
     }
-    dispatch(destroyShells(shellsToDestroy));
+    if (shellsToDestroy.length > 0) {
+        dispatch(destroyShells(shellsToDestroy));
+    }
 };
 
 const addDragNDropListeners = () => {

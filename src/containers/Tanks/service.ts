@@ -1,10 +1,9 @@
+import { v4 as uuid } from 'uuid';
+
 import { GamepadControls, IGamepadDOMEvents, IGamepadState } from 'containers/Gamepad/state/interfaces';
 import {
     CELL_SIZE,
-    SHELL_FPS,
-    SHELL_SIZE,
     TANK_FPS,
-    TANK_SIZE,
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
 import { TankDirection } from 'models/Tank';
@@ -12,19 +11,19 @@ import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
 import { parseSerialisedMatrix } from '../Arena/helper';
-import { loadArenaMap, registerImpactFromShell } from '../Arena/state/actions';
+import { loadArenaMap } from '../Arena/state/actions';
 import { getArenaMatrixSelector } from '../Arena/state/selectors';
 import {
     canMove,
     downloadShellSprites,
     downloadTankSprites,
-    getShellSprite,
-    getTankSprite,
-    isCollidingWithWorld,
-    isWithinTheWorld,
 } from './helpers';
-import { destroyShells, fireTank, moveShell, moveTank, turnTank } from './state/actions';
-import { playerTankSelector, shellsSelector, tanksSelector } from './state/selectors';
+import {
+    fireTank,
+    moveTank,
+    turnTank,
+} from './state/actions';
+import { playerTankSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
@@ -39,65 +38,6 @@ const setSize = () => {
 
 const clearScene = () => {
     context!.clearRect(0, 0, canvas.width, canvas.height);
-};
-
-const render = () => {
-    const shellRenderInterval = Math.round(1000 / SHELL_FPS);
-    setInterval(() => {
-        clearScene();
-        renderTanksForOneFrame();
-        renderShellsForOneFrame();
-    }, shellRenderInterval);
-};
-
-const renderTanksForOneFrame = () => {
-    const tanks = applySelector(tanksSelector);
-    for (const ID in tanks) {
-        if (tanks[ID]) {
-            const tank = tanks[ID];
-            context!.drawImage(
-                getTankSprite(tank.type, tank.direction)!,
-                tank.position.x,
-                tank.position.y,
-                TANK_SIZE,
-                TANK_SIZE,
-            );
-
-            if (__DEV__) {
-                context!.strokeStyle = '#FFFFFF';
-                context!.lineWidth = 2;
-                context!.strokeRect(tank.position.x, tank.position.y, TANK_SIZE, TANK_SIZE);
-            }
-        }
-    }
-};
-
-const renderShellsForOneFrame = () => {
-    const shells = applySelector(shellsSelector);
-    const shellsToDestroy: number[] = [];
-    for (const shellID in shells) {
-        if (shells[shellID]) {
-            const shell = shells[shellID];
-            const didImpact = isCollidingWithWorld(shell);
-            if (!isWithinTheWorld(shell, SHELL_SIZE) || didImpact) {
-                shellsToDestroy.push(shellID as any as number);
-                dispatch(registerImpactFromShell(shell));
-            } else {
-                context!.clearRect(shell.position.x, shell.position.y, SHELL_SIZE, SHELL_SIZE);
-                dispatch(moveShell(shell.ID));
-                context!.drawImage(
-                    getShellSprite(shell.direction)!,
-                    shell.position.x,
-                    shell.position.y,
-                    SHELL_SIZE,
-                    SHELL_SIZE,
-                );
-            }
-        }
-    }
-    if (shellsToDestroy.length > 0) {
-        dispatch(destroyShells(shellsToDestroy));
-    }
 };
 
 const addDragNDropListeners = () => {
@@ -244,7 +184,8 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
 
             case gamepadKeyBindings[GamepadControls.GAMEPAD_SHOOT]:
                 const playerTank = applySelector(playerTankSelector);
-                dispatch(fireTank(playerTank.ID));
+                const shellID = uuid();
+                dispatch(fireTank(playerTank.ID, shellID));
                 break;
         }
     };
@@ -282,6 +223,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
 };
 
 export const getTankViewCanvas = () => canvas;
+export const getTankViewContext = () => context;
 
 export const initTankView = async () => {
     setSize();
@@ -294,5 +236,4 @@ export const initTankView = async () => {
 
     await downloadTankSprites();
     await downloadShellSprites();
-    render();
 };

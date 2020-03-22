@@ -26,8 +26,8 @@ export const moveTank = (ID: ITank['ID'], direction: ITank['direction']): IRedux
     type: ActionTypes.TANK_MOVE,
 });
 
-export const fireTank = (ID: ITank['ID']): IReduxAction<ActionTypes.TANK_FIRE, { ID: ITank['ID'] }> => ({
-    data: { ID },
+export const fireTank = (tankID: ITank['ID'], shellID: IShell['ID']): IReduxAction<ActionTypes.TANK_FIRE, { tankID: ITank['ID'], shellID: IShell['ID'] }> => ({
+    data: { tankID, shellID },
     type: ActionTypes.TANK_FIRE,
 });
 

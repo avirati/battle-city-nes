@@ -23,8 +23,6 @@ const initialState: ITanksState = {
     vehicles: {},
 };
 
-let shellCounter = 0;
-
 export const reducer = (state: ITanksState = initialState, action: Actions): ITanksState => {
     switch (action.type) {
         case ActionTypes.TANK_SPAWN: {
@@ -38,6 +36,7 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                         HP: TANK_DEFAULT_HP,
                         ID,
                         direction: action.data!.direction,
+                        lastPosition: action.data!.position,
                         occupiedCells: TANK_SIZE_IN_CELLS,
                         position: action.data!.position,
                         size: TANK_SIZE,
@@ -72,6 +71,7 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                     ...state.vehicles,
                     [ID]: {
                         ...tank,
+                        lastPosition: tank.position,
                         position: {
                             ...tank.position,
                             x,
@@ -96,8 +96,8 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
             };
         }
         case ActionTypes.TANK_FIRE: {
-            const { ID } = action.data!;
-            const tank = state.vehicles[ID];
+            const { tankID, shellID } = action.data!;
+            const tank = state.vehicles[tankID];
             const position = new Coordinate(tank.position.x, tank.position.y);
             let shellPosition = position;
             switch (tank.direction) {
@@ -122,7 +122,6 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                         .changeY((TANK_SIZE - SHELL_SIZE) / 2);
                     break;
             }
-            const shellID = ++shellCounter;
             return {
                 ...state,
                 shells: {
@@ -130,6 +129,7 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                     [shellID]: {
                         ID: shellID,
                         direction: tank.direction,
+                        lastPosition: shellPosition,
                         occupiedCells: SHELL_SIZE_IN_CELLS,
                         position: shellPosition,
                         size: SHELL_SIZE,
@@ -163,6 +163,7 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
                     ...state.shells,
                     [shell.ID]: {
                         ...shell,
+                        lastPosition: shell.position,
                         position: {
                             ...shell.position,
                             x,

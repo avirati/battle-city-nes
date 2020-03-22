@@ -25,6 +25,7 @@ export interface ITank extends ITankProps {
     speed: number;
     size: number;
     occupiedCells: number;
+    lastPosition: ICoordinate;
 }
 
 export interface IShellProps {
@@ -33,10 +34,11 @@ export interface IShellProps {
 }
 
 export interface IShell extends IShellProps {
-    ID: number;
+    ID: string;
     speed: number;
     size: number;
     occupiedCells: number;
+    lastPosition: ICoordinate;
 }
 
 export interface ITanksState {
@@ -44,7 +46,7 @@ export interface ITanksState {
         [ID: string]: ITank;
     };
     shells: {
-        [ID: number]: IShell;
+        [ID: string]: IShell;
     };
     playerID: ITank['ID'];
 }

@@ -20,7 +20,7 @@ export const tanksSelector = createSelector(
 export const playerTankIDSelector = createSelector(
     [tanksStateSelector],
     (state) => state.playerID,
-)
+);
 
 export const playerTankSelector = createSelector(
     [
@@ -28,4 +28,4 @@ export const playerTankSelector = createSelector(
         playerTankIDSelector,
     ],
     (tanks, playerID) => tanks[playerID],
-)
+);

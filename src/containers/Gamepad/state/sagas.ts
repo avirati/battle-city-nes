@@ -66,7 +66,6 @@ function * saveKeyBindingSaga() {
     if (isEveryKeyMapped) {
         addKeyBindings(gamepadKeyBindings);
         yield put(saveKeyBindingSuccess());
-        yield put(startGame());
     }
 }
 

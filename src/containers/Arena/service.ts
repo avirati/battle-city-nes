@@ -1,3 +1,5 @@
+import { willDestroyCell } from 'containers/Tanks/helpers';
+import { IShell } from 'containers/Tanks/state/interfaces';
 import {
     ARENA_SIZE,
     BRICK_IMAGE,
@@ -10,7 +12,7 @@ import {
 } from 'global/constants';
 import { getScreenDimension } from 'helpers';
 import { Cell, CellType, ICell } from 'models/Cell';
-import { Shell } from 'models/Shell';
+import { Coordinate } from 'models/Coordinate';
 import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
@@ -110,8 +112,9 @@ const downloadTextures = async (): Promise<void> => {
     imageMap.set(CellType.EMPTY, emptyImage);
 };
 
-const impactedCellsInFront = (shell: Shell) => {
-    const topLeft = shell.position;
+const impactedCellsInFront = (shell: IShell) => {
+    const { x, y } = shell.position;
+    const topLeft = new Coordinate(x, y);
     const topLeftOfLeft = topLeft.changeX(-shell.size);
     const topRight = topLeft.changeX(shell.size);
     const topRightOfRight = topRight.changeX(shell.size);
@@ -127,15 +130,16 @@ const impactedCellsInFront = (shell: Shell) => {
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
         if (cellRow - shell.occupiedCells >= 0) {
             const cell = matrix[cellColumn][cellRow - shell.occupiedCells];
-            if (cell && shell.willDestroyCell(cell)) {
+            if (cell && willDestroyCell(cell)) {
                 dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
 };
 
-const impactedCellsInRight = (shell: Shell) => {
-    const topRight = shell.position.changeX(shell.size);
+const impactedCellsInRight = (shell: IShell) => {
+    const { x, y } = shell.position;
+    const topRight = new Coordinate(x, y).changeX(shell.size);
     const topRightAbove = topRight.changeY(-shell.size);
     const bottomLeft = topRight.changeY(shell.size);
     const bottomLeftBelow = bottomLeft.changeY(shell.size);
@@ -150,15 +154,16 @@ const impactedCellsInRight = (shell: Shell) => {
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
         if (cellColumn + shell.occupiedCells < ARENA_SIZE) {
             const cell = matrix[cellColumn + shell.occupiedCells][cellRow];
-            if (cell && shell.willDestroyCell(cell)) {
+            if (cell && willDestroyCell(cell)) {
                 dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
 };
 
-const impactedCellsInBack = (shell: Shell) => {
-    const bottomLeft = shell.position.changeY(shell.size);
+const impactedCellsInBack = (shell: IShell) => {
+    const { x, y } = shell.position;
+    const bottomLeft = (new Coordinate(x, y)).changeY(shell.size);
     const bottomLeftOfLeft = bottomLeft.changeX(-shell.size);
     const bottomRight = bottomLeft.changeX(shell.size);
     const bottomRightOfRight = bottomRight.changeX(shell.size);
@@ -173,15 +178,16 @@ const impactedCellsInBack = (shell: Shell) => {
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
         if (cellRow + shell.occupiedCells < ARENA_SIZE) {
             const cell = matrix[cellColumn][cellRow + shell.occupiedCells];
-            if (cell && shell.willDestroyCell(cell)) {
+            if (cell && willDestroyCell(cell)) {
                 dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
     });
 };
 
-const impactedCellsInLeft = (shell: Shell) => {
-    const topLeft = shell.position;
+const impactedCellsInLeft = (shell: IShell) => {
+    const { x, y } = shell.position;
+    const topLeft = new Coordinate(x, y);
     const topLeftAbove = topLeft.changeY(-shell.size);
     const bottomLeft = topLeft.changeY(shell.size);
     const bottomLeftBelow = bottomLeft.changeY(shell.size);
@@ -196,7 +202,7 @@ const impactedCellsInLeft = (shell: Shell) => {
         const cellRow = Math.floor(extremety.y / CELL_SIZE);
         if (cellColumn - shell.occupiedCells >= 0) {
             const cell = matrix[cellColumn - shell.occupiedCells][cellRow];
-            if (cell && shell.willDestroyCell(cell)) {
+            if (cell && willDestroyCell(cell)) {
                 dispatch(changeCellType(cell, CellType.EMPTY));
             }
         }
@@ -213,7 +219,7 @@ export const renderCell = (cell: Cell) => {
     );
 };
 
-export const registerCellDestructionFrom = (shell: Shell): void => {
+export const registerCellDestructionFrom = (shell: IShell): void => {
     switch (shell.direction) {
         case TankDirection.FORWARD:
             impactedCellsInFront(shell);

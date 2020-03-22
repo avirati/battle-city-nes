@@ -279,8 +279,6 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
     });
 };
 
-export const seekAndDestroy = () => {}
-
 export const getTankViewCanvas = () => canvas;
 
 export const initTankView = async () => {

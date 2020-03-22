@@ -11,7 +11,7 @@ import {
     TANK_SPRITES,
     VIEWPORT_SIZE,
 } from 'global/constants';
-import { ICell } from 'models/Cell';
+import { CellType, ICell } from 'models/Cell';
 import { Coordinate } from 'models/Coordinate';
 import { TankDirection, TankType } from 'models/Tank';
 import { applySelector } from 'state/services';
@@ -102,6 +102,7 @@ export const downloadTankSprites = async () => {
 };
 
 export const willCollideWithCell = (cell: ICell) => COLLIDABLE_CELLS.includes(cell.type);
+export const willDestroyCell = (cell: ICell) => [CellType.BRICK, CellType.EAGLE].includes(cell.type);
 
 export const getTankSprite = (type: TankType, direction: TankDirection) => tankSprites.get(getSpriteKey(type, direction));
 

@@ -99,7 +99,7 @@ export const reducer = (state: ITanksState = initialState, action: Actions): ITa
             const { ID } = action.data!;
             const tank = state.vehicles[ID];
             const position = new Coordinate(tank.position.x, tank.position.y);
-            let shellPosition;
+            let shellPosition = position;
             switch (tank.direction) {
                 case TankDirection.FORWARD:
                     shellPosition = position

@@ -2,6 +2,7 @@ import {
     delay,
     select,
     takeEvery,
+    throttle,
 } from 'redux-saga/effects';
 
 import { registerImpactFromShell } from 'containers/Arena/state/actions';
@@ -41,20 +42,32 @@ function * spawnTankSaga(action: ReturnType<typeof spawnTank>) {
     const tanks: ITanksState['vehicles'] = yield select(tanksSelector);
     const tank = tanks[ID];
 
+    if (!tank) {
+        return;
+    }
+
     renderTank(context!, tank);
 }
 
 function * watchForMoveTank() {
-    yield takeEvery(ActionTypes.TANK_MOVE, moveTankSaga);
+    yield throttle(100, ActionTypes.TANK_MOVE, moveTankSaga);
 }
 
 function * moveTankSaga(action: ReturnType<typeof moveTank>) {
     const { ID } = action.data!;
     const context = getTankViewContext();
-    const tanks: ITanksState['vehicles'] = yield select(tanksSelector);
-    const tank = tanks[ID];
 
-    renderTank(context!, tank);
+    for (let i = 0; i < 60; i++) {
+        const tanks: ITanksState['vehicles'] = yield select(tanksSelector);
+        const tank = tanks[ID];
+
+        if (!tank) {
+            break;
+        }
+
+        renderTank(context!, tank);
+        yield delay(100 / 60);
+    }
 }
 
 function * watchForFireTank() {

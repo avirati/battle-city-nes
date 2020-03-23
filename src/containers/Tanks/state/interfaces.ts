@@ -1,5 +1,4 @@
 import { ICoordinate } from 'models/Coordinate';
-import {  } from 'models/Shell';
 
 export enum TankDirection {
     RIGHT = 'RIGHT',

@@ -5,7 +5,6 @@ import {
     TANK_SIZE_IN_CELLS,
 } from 'global/constants';
 import { Coordinate } from 'models/Coordinate';
-import { TankType } from 'models/Tank';
 
 import { Actions, ActionTypes } from './actions';
 import {
@@ -13,7 +12,7 @@ import {
     TANK_DEFAULT_HP,
     TANK_DEFAULT_SPEED,
 } from './constants';
-import { ITanksState, TankDirection } from './interfaces';
+import { ITanksState, TankDirection, TankType } from './interfaces';
 
 const initialState: ITanksState = {
     playerID: '',

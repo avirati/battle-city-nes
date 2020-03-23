@@ -13,11 +13,15 @@ import {
 } from 'global/constants';
 import { CellType, ICell } from 'models/Cell';
 import { Coordinate } from 'models/Coordinate';
-import { TankDirection, TankType } from 'models/Tank';
 import { applySelector } from 'state/services';
 
 import { TANK_BOUNDING_BOX_WIDTH } from './constants';
-import { IShell, ITank } from './state/interfaces';
+import {
+    IShell,
+    ITank,
+    TankDirection,
+    TankType,
+} from './state/interfaces';
 
 const tankSprites: Map<string, HTMLImageElement> = new Map();
 const shellSprites: Map<string, HTMLImageElement> = new Map();

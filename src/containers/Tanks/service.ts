@@ -7,7 +7,6 @@ import {
 } from 'global/constants';
 import { throttle } from 'global/helpers';
 import { getScreenDimension } from 'helpers';
-import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 
@@ -27,6 +26,7 @@ import {
     moveTankStop,
     turnTank,
 } from './state/actions';
+import { TankDirection } from './state/interfaces';
 import { playerTankSelector } from './state/selectors';
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');

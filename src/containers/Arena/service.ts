@@ -1,5 +1,5 @@
 import { willDestroyCell } from 'containers/Tanks/helpers';
-import { IShell } from 'containers/Tanks/state/interfaces';
+import { IShell, TankDirection } from 'containers/Tanks/state/interfaces';
 import {
     ARENA_SIZE,
     BRICK_IMAGE,
@@ -13,7 +13,6 @@ import {
 import { getScreenDimension } from 'helpers';
 import { Cell, CellType, ICell } from 'models/Cell';
 import { Coordinate } from 'models/Coordinate';
-import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
 import { dispatch } from 'state/store';
 

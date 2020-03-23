@@ -5,6 +5,7 @@ import {
     CELL_SIZE,
     TANK_FPS,
 } from 'global/constants';
+import { throttle } from 'global/helpers';
 import { getScreenDimension } from 'helpers';
 import { TankDirection } from 'models/Tank';
 import { applySelector } from 'state/services';
@@ -13,6 +14,7 @@ import { dispatch } from 'state/store';
 import { parseSerialisedMatrix } from '../Arena/helper';
 import { loadArenaMap } from '../Arena/state/actions';
 import { getArenaMatrixSelector } from '../Arena/state/selectors';
+import { SHELL_FIRE_INTERVAL } from './constants';
 import {
     canMove,
     downloadShellSprites,
@@ -169,6 +171,15 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
         movementTimeout = setTimeout(move, TANK_FPS, direction);
     };
 
+    const throttledFireShell = throttle(
+        () => {
+            const playerTank = applySelector(playerTankSelector);
+            const shellID = uuid();
+            dispatch(fireTank(playerTank.ID, shellID));
+        },
+        SHELL_FIRE_INTERVAL,
+    );
+
     const onKeyDown = (buttonName: GameControlButtonTypes | number) => {
         switch (buttonName) {
             case gamepadKeyBindings[GamepadControls.GAMEPAD_UP]: // UP Arrow
@@ -189,9 +200,7 @@ export const addKeyBindings = (gamepadKeyBindings: IGamepadState['keyBindings'])
                 break;
 
             case gamepadKeyBindings[GamepadControls.GAMEPAD_SHOOT]:
-                const playerTank = applySelector(playerTankSelector);
-                const shellID = uuid();
-                dispatch(fireTank(playerTank.ID, shellID));
+                throttledFireShell();
                 break;
         }
     };

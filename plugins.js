@@ -32,6 +32,10 @@ module.exports = {
                     from: path.resolve(__dirname, 'public/images'),
                     to: path.resolve(__dirname, 'dist/images'),
                 },
+                {
+                    from: path.resolve(__dirname, 'public/game.level'),
+                    to: path.resolve(__dirname, 'dist/game.level'),
+                }
             ]),
         ];
 

@@ -80,6 +80,17 @@ const addDragNDropListeners = () => {
     canvas.addEventListener('drop', FileSelectHandler, false);
 };
 
+export const loadDefaultLevel = () => {
+    fetch('/game.level', {
+        method: 'GET',
+    })
+    .then((response) => response.text())
+    .then((serialisedGameData) => {
+        const gameData = parseSerialisedMatrix(serialisedGameData);
+        dispatch(loadArenaMap(gameData));
+    });
+};
+
 const addCellInspector = () => {
     canvas.addEventListener('mousemove', (event: MouseEvent) => {
         const x = event.offsetX;
@@ -244,6 +255,7 @@ export const initTankView = async () => {
     setSize();
     clearScene();
     addDragNDropListeners();
+    loadDefaultLevel();
 
     if (__DEV__) {
         addCellInspector();

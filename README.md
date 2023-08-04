@@ -2,7 +2,7 @@
 
 Typescript implementation of the classic video game - Battle City (NES)
 
-Demo - https://battle-city-nes.herokuapp.com/
+Demo - https://battlecity.avinashv.dev/
 
 ![alt tag](https://raw.githubusercontent.com/avirati/battle-city-nes/master/images/image1.png)
 
@@ -22,8 +22,7 @@ Demo - https://battle-city-nes.herokuapp.com/
 5. Design multiple levels
 6. Add sound
 
-License
-----
+## License
 
 MIT
 
